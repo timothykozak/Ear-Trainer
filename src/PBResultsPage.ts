@@ -67,7 +67,7 @@ class PBResultsPage {
         // The HTML to build the page.
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
-                <input type="button" value="Clear Results" onclick="window.pbEarTraining.ui.results.clearResults();">
+                <input type="button" value="Clear Results" onclick="window.pbEarTrainer.ui.results.clearResults();">
                 <result-component id="idC" x="100" y="200" label="C" ></result-component>
                 <result-component id="idD" x="140" y="200" label="D" ></result-component>
                 <result-component id="idE" x="180" y="200" label="E" ></result-component>
