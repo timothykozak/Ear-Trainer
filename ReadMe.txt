@@ -1,4 +1,4 @@
-                      Ear Training
+                      Ear Trainer
 
 This program is a web app that implements the Bruce Arnold
 method for recognizing a note within the "sense" of a key.
@@ -29,7 +29,7 @@ The help page gives some basic information and acknowledgements.
 Will only run on Chrome with experimental canvas features enabled (chrome://flags then search for canvas).
 
 This project on GitHub:
-    https://github.com/timothykozak/Ear-Training
+    https://github.com/timothykozak/Ear-Trainer
 
 Typescript:
   https://www.typescriptlang.org/docs/handbook/classes.html
