@@ -1,0 +1,156 @@
+/*  basic.css
+*/
+
+
+/*************************** Fonts **********************************************/
+@font-face {    /* Used by the font loader */
+    font-family:"Aruvarb";
+    src:url("assets/fonts/Aruvarb.ttf") format("truetype");
+}
+
+@font-face {
+    font-family:"ionicons";
+    src:url("assets/fonts/ionicons.ttf") format("truetype");
+}
+
+/*************************** Menu and Transport **********************************/
+.menuDiv {
+    background-color: #ddd;
+    height: 100%;
+    width: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+div.menuDiv ul {
+    font-family: "ionicons";
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 40px;
+    text-align: center;
+    user-select: none;
+    -moz-user-select: none;
+}
+
+div.menuDiv li {
+    display: block;
+    color: #000;
+}
+
+div.menuDiv li:hover {
+    background-color: #555;
+    color: white;
+}
+
+.transportDiv {
+    background-color: #ddd;
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+.resultsDiv {
+    position: absolute;
+    top: 10px;
+    left: 55px;
+    width: 200px;
+    height: 40px;
+    background: white;
+}
+
+div.transportDiv ul {
+    font-family: "ionicons";
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 60px;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    -moz-user-select: none;
+}
+
+div.transportDiv li {
+    display: inline;
+    padding: 0 30px 0 30px;
+}
+
+div.transportDiv li:hover {
+    text-shadow: 0 0 30px #0f0, 0 0 30px #0f0, -3px 0 #000000,0 3px #000000, 3px 0 #000000,0 -3px #000000;
+    color: white;
+}
+
+
+/*************************** Pages for the Menu ************************************/
+.pageContainerDiv {
+    background-color: #000000;
+    position: fixed;
+}
+.pageDiv {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: block;
+    overflow: auto;
+}
+.centerDiv {
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.helpTitle {
+    text-align: center;
+    font-size: 30px;
+}
+/*************************** Tool Tips **********************************************/
+/* toolTip container */
+.toolTip {
+    position: relative;
+    display: inline-block;
+}
+
+/* toolTip text */
+.toolTip .toolTipText {
+    visibility: hidden;
+    font-size: 20px;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Fade in toolTip */
+    opacity: 0;
+    transition: opacity 0.7s;
+    transition-delay: 0.5s;
+}
+
+/* Position the toolTip text to the right */
+.toolTip .toolTipTextRight {
+    position: absolute;
+    z-index: 1;
+    top: 15%;
+    left: 120%;
+}
+
+/* Position the toolTip text above */
+.toolTip .toolTipTextAbove {
+    position: absolute;
+    z-index: 1;
+    top: -70%;
+    left: -20%;
+    text-shadow: none;
+}
+
+/* Show the toolTip text when you mouse over the toolTip container */
+.toolTip:hover .toolTipText {
+    visibility: visible;
+    opacity: 1;
+} 
