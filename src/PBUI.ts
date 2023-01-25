@@ -89,8 +89,8 @@ class PBUI {
             <ul>
                 <li id="transportRewind" class="toolTip">&#xf3cf<span class="toolTipText toolTipTextAbove">Rewind</span></li>
                 <li id="transportStop" class="toolTip">&#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
-                <li id="transportStart" class="toolTip" onclick="window.pbEarTraining.tester.startTest();">&#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
-                <li id="transportPause" onclick="window.pbEarTraining.ui.transportShowStopStart();" class="toolTip">&#xf478<span class="toolTipText toolTipTextAbove">Pause</span></li>
+                <li id="transportStart" class="toolTip" onclick="window.pbEarTrainer.tester.startTest();">&#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
+                <li id="transportPause" onclick="window.pbEarTrainer.ui.transportShowStopStart();" class="toolTip">&#xf478<span class="toolTipText toolTipTextAbove">Pause</span></li>
                 <li id="transportForward" class="toolTip">&#xf3d1<span class="toolTipText toolTipTextAbove">Forward</span></li>
             </ul>
         </div>        `);
@@ -99,13 +99,13 @@ class PBUI {
     static buildMenuHTML(): string {
         return(`        <div class="menuDiv">
             <ul>
-                <li id="${'MLI' + (PBUI.MP_HOME + 1)}" class="toolTip" onclick="window.pbEarTraining.ui.handleMenu(${PBUI.MP_HOME});">
+                <li id="${'MLI' + (PBUI.MP_HOME + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_HOME});">
                     &#xf20d<span class="toolTipText toolTipTextRight">Home</span></li>
-                <li id="${'MLI' + (PBUI.MP_OPTIONS + 1)}" class="toolTip" onclick="window.pbEarTraining.ui.handleMenu(${PBUI.MP_OPTIONS});">
+                <li id="${'MLI' + (PBUI.MP_OPTIONS + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_OPTIONS});">
                     &#xf2f7<span class="toolTipText toolTipTextRight">Settings</span></li>
-                <li id="${'MLI' + (PBUI.MP_STATS + 1)}" class="toolTip" onclick="window.pbEarTraining.ui.handleMenu(${PBUI.MP_STATS});">
+                <li id="${'MLI' + (PBUI.MP_STATS + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_STATS});">
                     &#xf2b5<span class="toolTipText toolTipTextRight">Results</span></li>
-                <li id="${'MLI' + (PBUI.MP_HELP + 1)}" class="toolTip" onclick="window.pbEarTraining.ui.handleMenu(${PBUI.MP_HELP});">
+                <li id="${'MLI' + (PBUI.MP_HELP + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_HELP});">
                     &#xf444<span class="toolTipText toolTipTextRight">Help</span></li>
             </ul>
         </div>
@@ -142,7 +142,7 @@ class PBUI {
 
     static buildHelpPageHTML(): string {
         return(`<div id="theHelpPage" class="pageDiv" style="background-color: #dddddd;">
-<div class="helpTitle">Ear Training</div>
+<div class="helpTitle">Ear Trainer</div>
 <div>The web app uses the Bruce Arnold method of training the ear to recognize a note relative to the key.</div>
 <div class="helpTitle">Acknowledgements</div>
 <div>The piano samples were downloaded from: </div>
