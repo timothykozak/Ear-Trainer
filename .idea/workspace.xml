@@ -3,6 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="e5dcad9b-a0d4-4096-979a-7863d0df71aa" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PBEarTrainer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/PBEarTrainer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PBOptionsPage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/PBOptionsPage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PBResultsPage.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/PBResultsPage.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PBServiceWorker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/PBServiceWorker.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PBUI.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/PBUI.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +34,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "true",
     "last_opened_file_path": "C:/Users/Fr. Tim/Desktop/Other Machines/SBM1 Backup 6-6-11/My Source/Webstorm/Music/Ear-Trainer",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "settings.editor.selected.configurable": "settings.typescriptcompiler",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2022.2.3\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -60,7 +65,7 @@
       <workItem from="1674653979374" duration="129000" />
       <workItem from="1674654139284" duration="24000" />
       <workItem from="1674654177681" duration="21000" />
-      <workItem from="1674654210821" duration="1445000" />
+      <workItem from="1674654210821" duration="2828000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <created>1674654338835</created>
@@ -83,11 +88,29 @@
       <option name="project" value="LOCAL" />
       <updated>1674656838004</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Unsure.">
+      <created>1674656891326</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1674656891326</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
@@ -96,7 +119,26 @@
     </ignored-roots>
     <MESSAGE value="Changed from Training to Trainer." />
     <MESSAGE value="Initial commit." />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit." />
+    <MESSAGE value="Unsure." />
+    <option name="LAST_COMMIT_MESSAGE" value="Unsure." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/PBNotation.ts</url>
+          <line>68</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/PBEarTrainer.ts</url>
+          <line>63</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
