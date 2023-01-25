@@ -88,11 +88,11 @@ class PBOptionsPage {
         // The HTML to build the page.
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
-                <input type="button" value="None" onclick="window.pbEarTraining.ui.options.createStandardTest(0);">
-                <input type="button" value="I IV V" onclick="window.pbEarTraining.ui.options.createStandardTest(1);">
-                <input type="button" value="White" onclick="window.pbEarTraining.ui.options.createStandardTest(2);">
-                <input type="button" value="Black" onclick="window.pbEarTraining.ui.options.createStandardTest(3);">
-                <input type="button" value="All" onclick="window.pbEarTraining.ui.options.createStandardTest(4);">
+                <input type="button" value="None" onclick="window.pbEarTrainer.ui.options.createStandardTest(0);">
+                <input type="button" value="I IV V" onclick="window.pbEarTrainer.ui.options.createStandardTest(1);">
+                <input type="button" value="White" onclick="window.pbEarTrainer.ui.options.createStandardTest(2);">
+                <input type="button" value="Black" onclick="window.pbEarTrainer.ui.options.createStandardTest(3);">
+                <input type="button" value="All" onclick="window.pbEarTrainer.ui.options.createStandardTest(4);">
                 <key-component id="idC" x="100" y="200" label="C" ></key-component>
                 <key-component id="idD" x="140" y="200" label="D" ></key-component>
                 <key-component id="idE" x="180" y="200" label="E" ></key-component>
