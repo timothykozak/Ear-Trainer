@@ -1,4 +1,4 @@
-// PBEarTraining.ts
+// PBEarTrainer.ts
 //
 //
 //
