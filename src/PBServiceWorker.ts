@@ -1,10 +1,10 @@
-// This is the Service Worker code.  It is registered in PBEarTraining.
+// This is the Service Worker code.  It is registered in PBEarTrainer.
 // Note that the console messages will only show up when the Service
 // Worker is registered the first time.
 // Unsure why the [fetch] console messages are not showing up.
 //
 
-let CACHE_NAME = 'EarTraining-cache';
+let CACHE_NAME = 'EarTrainer-cache';
 
 // Files required to make this app work offline
 let REQUIRED_FILES = [
@@ -12,7 +12,7 @@ let REQUIRED_FILES = [
     '../index.html',
      '../built/PBCharacterInput.js',
     '../built/PBConst.js',
-    '../built/PBEarTraining.js',
+    '../built/PBEarTrainer.js',
     '../built/PBNotation.js',
     '../built/PBNotation.js',
     '../built/PBPianoKeyboard.js',
