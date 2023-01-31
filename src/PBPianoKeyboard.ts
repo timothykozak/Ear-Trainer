@@ -42,20 +42,17 @@ class PBPianoKeyboard {
 
     constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public contextRect: MyRect, public statusWnd: PBStatusWindow, public sequencer: PBSequencer) {
         if (canvas) {
-            this.canvas.addEventListener(PBConst.EVENTS.mouseClick, (event: MouseEvent) => {
-                this.onClick(event);
-            });
-            this.canvas.addEventListener(PBConst.EVENTS.mouseLeave, (event: MouseEvent) => {
-                this.onMouseLeave(event);
-            });
-            this.canvas.addEventListener(PBConst.EVENTS.mouseMove, (event: MouseEvent) => {
-                this.onMouseMove(event);
-            });
-            document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {
-                this.onSequencerNotePlayed(event);
-            }, false);
+            this.initListeners();
             this.resize(this.contextRect);
         }
+    }
+
+    initListeners() {
+        this.canvas.addEventListener(PBConst.EVENTS.mouseClick, (event: MouseEvent) => {this.onClick(event);});
+        this.canvas.addEventListener(PBConst.EVENTS.mouseLeave, (event: MouseEvent) => {this.onMouseLeave(event);});
+        this.canvas.addEventListener(PBConst.EVENTS.mouseMove, (event: MouseEvent) => {this.onMouseMove(event);});
+        document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencerNotePlayed(event);}, false);
+        document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.drawKeyboard();}, false);
     }
 
     onSequencerNotePlayed(event: CustomEvent) {
