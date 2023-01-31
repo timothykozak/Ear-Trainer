@@ -140,6 +140,7 @@ class PBTester {
         if (this.testRunning) {
             this.testRunning = false;
             this.waitingForAnswer = false;
+            this.sequencer.resetSequence();
             document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerFinished, {detail: {theResults: this.results}}));
         }
     }
