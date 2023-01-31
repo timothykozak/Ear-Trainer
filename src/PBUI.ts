@@ -66,18 +66,26 @@ class PBUI {
         this.transportBuildElementArray();
         this.onResizeFinished();    // The initial sizing
         this.assignOnResize();
+        this.initListeners();
+    }
+
+    initListeners() {
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
+        document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.onTestFinished(event);}, false);
     }
 
     onTestNotePlayed(event: CustomEvent) {
-        this.transportShowStopStart();
     }
 
     onNoteAnswered(event: CustomEvent) {
         let theTest = event.detail.theResults as TestResults;
         this.resultsDiv.innerText = `Total Notes: ${theTest.totalNotes} Correct: ${theTest.numCorrect} Tested Notes: ${theTest.notesTested} Wrong: ${theTest.numWrong}`;
-}
+    }
+
+    onTestFinished(event: CustomEvent) {
+        this.transportShowElements([TID.Start]);
+    }
 
     static buildCanvasHTML(): string {
         return (`<canvas id="theCanvas" style="position: absolute;"></canvas>`);
@@ -87,11 +95,8 @@ class PBUI {
         return(`<div class="transportDiv">
             <div id="transportStats" class="resultsDiv"></div>
             <ul>
-                <li id="transportRewind" class="toolTip">&#xf3cf<span class="toolTipText toolTipTextAbove">Rewind</span></li>
-                <li id="transportStop" class="toolTip">&#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
+                <li id="transportStop" class="toolTip" onclick="window.pbEarTrainer.tester.stopTest();">&#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
                 <li id="transportStart" class="toolTip" onclick="window.pbEarTrainer.tester.startTest();">&#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
-                <li id="transportPause" onclick="window.pbEarTrainer.ui.transportShowStopStart();" class="toolTip">&#xf478<span class="toolTipText toolTipTextAbove">Pause</span></li>
-                <li id="transportForward" class="toolTip">&#xf3d1<span class="toolTipText toolTipTextAbove">Forward</span></li>
             </ul>
         </div>        `);
     }
@@ -228,16 +233,13 @@ class PBUI {
         this.resultsDiv = document.getElementById('transportStats') as HTMLDivElement;
         this.transportBuildElementArray();
         this.transportShowElements([TID.Start]);
-        document.addEventListener(PBConst.EVENTS.testerStarted, () => {this.transportShowElements([TID.Stop, TID.Pause]);}, false);
+        document.addEventListener(PBConst.EVENTS.testerStarted, () => {this.transportShowElements([TID.Stop]);}, false);
     }
 
     transportBuildElementArray() {
         this.transportElements = [];
-        this.transportElements[TID.Rewind] = document.getElementById("transportRewind") as HTMLDivElement;
         this.transportElements[TID.Start] = document.getElementById("transportStart") as HTMLDivElement;
         this.transportElements[TID.Stop] = document.getElementById("transportStop") as HTMLDivElement;
-        this.transportElements[TID.Pause] = document.getElementById("transportPause") as HTMLDivElement;
-        this.transportElements[TID.Forward] = document.getElementById("transportForward") as HTMLDivElement;
     }
 
     transportHideAllElements(isHidden: boolean) {
@@ -245,13 +247,9 @@ class PBUI {
     }
 
     transportShowElements(theElements: TID[]) {
-        // Show only the the requested elements
+        // Show only the requested elements
         this.transportHideAllElements(true);
         theElements.forEach((index) => {this.transportElements[index].style.display = 'initial';})
-    }
-
-    transportShowStopStart() {
-        this.transportShowElements([TID.Stop, TID.Start]);
     }
 
 }
