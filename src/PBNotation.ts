@@ -58,10 +58,15 @@ class PBNotation {
 
     constructor(public context: CanvasRenderingContext2D, public contextRect: MyRect) {
         this.resize(this.contextRect);  // The initial sizing.
+        this.initListeners();
+    }
+
+    initListeners() {
         document.addEventListener(PBConst.EVENTS.sequencerCadenceStarted, () => {this.onCadenceStarted();}, false);
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencer(event);}, false);
         document.addEventListener(PBConst.EVENTS.keyboardHover, (event: CustomEvent) => {this.onHover(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onAnswered(event);}, false);
+        document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.redraw();}, false);
     }
 
     onAnswered(event: CustomEvent) {
