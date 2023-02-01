@@ -48,7 +48,7 @@ class PBPianoKeyboard {
     }
 
     initListeners() {
-        this.canvas.addEventListener(PBConst.EVENTS.mouseClick, (event: MouseEvent) => {this.onClick(event);});
+        this.canvas.addEventListener(PBConst.EVENTS.mouseDown, (event: MouseEvent) => {this.onMouseDown(event);});
         this.canvas.addEventListener(PBConst.EVENTS.mouseLeave, (event: MouseEvent) => {this.onMouseLeave(event);});
         this.canvas.addEventListener(PBConst.EVENTS.mouseMove, (event: MouseEvent) => {this.onMouseMove(event);});
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencerNotePlayed(event);}, false);
@@ -117,7 +117,7 @@ class PBPianoKeyboard {
         this.hoverKey = hoverKey;
     }
 
-    onClick(event: MouseEvent) {
+    onMouseDown(event: MouseEvent) {
         // Mouse clicked.  Check to see if a note needs to be played.
         let hoverKey = this.checkForHover(event);
         this.statusWnd.writeMsg(event.type + " event: x " + event.offsetX + " y " + event.offsetY + "  hoverKey: " + hoverKey);
