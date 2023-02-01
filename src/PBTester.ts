@@ -37,6 +37,10 @@ class PBTester {
     results: TestResults;
 
     constructor(public audioContext: AudioContext, public sequencer: PBSequencer) {
+        this.initListeners();
+    }
+
+    initListeners() {
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
     }

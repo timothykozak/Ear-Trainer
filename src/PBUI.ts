@@ -70,21 +70,38 @@ class PBUI {
     }
 
     initListeners() {
+        document.addEventListener(PBConst.EVENTS.sequencerCadenceStarted, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.onTestFinished(event);}, false);
     }
 
     onTestNotePlayed(event: CustomEvent) {
+        this.transportShowElements([TID.Start, TID.Stop]);
     }
 
     onNoteAnswered(event: CustomEvent) {
+        this.transportShowElements([TID.Stop]);
         let theTest = event.detail.theResults as TestResults;
         this.resultsDiv.innerText = `Total Notes: ${theTest.totalNotes} Correct: ${theTest.numCorrect} Tested Notes: ${theTest.notesTested} Wrong: ${theTest.numWrong}`;
     }
 
     onTestFinished(event: CustomEvent) {
         this.transportShowElements([TID.Start]);
+    }
+
+    onStartButtonClicked(event: MouseEvent) {
+        if (this.tester.testRunning) {
+            if (this.tester.waitingForAnswer)
+                this.transportShowElements([TID.Stop]);
+            this.tester.pickNextNoteToTest();
+        }
+        else
+            this.tester.startTest();
+    }
+
+    onStopButtonClicked(event: MouseEvent) {
+        this.tester.stopTest();
     }
 
     static buildCanvasHTML(): string {
@@ -95,8 +112,8 @@ class PBUI {
         return(`<div class="transportDiv">
             <div id="transportStats" class="resultsDiv"></div>
             <ul>
-                <li id="transportStop" class="toolTip" onclick="window.pbEarTrainer.tester.stopTest();">&#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
-                <li id="transportStart" class="toolTip" onclick="window.pbEarTrainer.tester.startTest();">&#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
+                <li id="transportStop" class="toolTip" onclick="window.pbEarTrainer.ui.onStopButtonClicked();">&#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
+                <li id="transportStart" class="toolTip" onclick="window.pbEarTrainer.ui.onStartButtonClicked();">&#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
             </ul>
         </div>        `);
     }
