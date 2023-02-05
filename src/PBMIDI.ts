@@ -73,13 +73,15 @@ class PBMIDI {
         let note = message.data[1];
         let velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
 
-        switch (command) {
-            case PBConst.MIDI.MESSAGES.NOTE_ON:
-                (velocity > 0) ? this.noteOnReceived(note, velocity) : this.noteOffReceived(note);
-                break;
-            case PBConst.MIDI.MESSAGES.NOTE_OFF:
-                this.noteOffReceived(note);
-                break;
+        if (command != PBConst.MIDI.MESSAGES.ACTIVE_SENSING) {
+            switch (command) {
+                case PBConst.MIDI.MESSAGES.NOTE_ON:
+                    (velocity > 0) ? this.noteOnReceived(note, velocity) : this.noteOffReceived(note);
+                    break;
+                case PBConst.MIDI.MESSAGES.NOTE_OFF:
+                    this.noteOffReceived(note);
+                    break;
+            }
         }
     }
 
