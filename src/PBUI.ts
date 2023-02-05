@@ -70,10 +70,14 @@ class PBUI {
     }
 
     initListeners() {
-        document.addEventListener(PBConst.EVENTS.sequencerCadenceStarted, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
+        document.addEventListener(PBConst.EVENTS.sequencerCadenceStarted, (event: CustomEvent) => {this.onCadenceStarted(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.onTestFinished(event);}, false);
+    }
+
+    onCadenceStarted(event: CustomEvent) {
+        this.transportShowElements([TID.Stop]);
     }
 
     onTestNotePlayed(event: CustomEvent) {
@@ -81,7 +85,7 @@ class PBUI {
     }
 
     onNoteAnswered(event: CustomEvent) {
-        this.transportShowElements([TID.Stop]);
+        this.transportShowElements([TID.Stop, TID.Start]);
         let theTest = event.detail.theResults as TestResults;
         this.resultsDiv.innerText = `Total Notes: ${theTest.totalNotes} Correct: ${theTest.numCorrect} Tested Notes: ${theTest.notesTested} Wrong: ${theTest.numWrong}`;
     }
