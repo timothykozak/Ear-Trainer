@@ -69,7 +69,7 @@ class PBMIDI {
     }
 
     onMIDIMessage(message: WebMidi.MIDIMessageEvent) {
-        let command = (message.data[0] & 0xf0) >> 4;   // Command is the highest nibble
+        let command = (message.data[0] & 0xf0) >>> 4;   // Command is the highest nibble
         let controller = message.data[0] & 0x0f;       // Controller is the lowest nibble
 
         if (message.data[0] != PBConst.MIDI.MESSAGES.ACTIVE_SENSING) {
