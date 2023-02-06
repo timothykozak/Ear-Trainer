@@ -69,17 +69,21 @@ class PBMIDI {
     }
 
     onMIDIMessage(message: WebMidi.MIDIMessageEvent) {
-        let command = message.data[0];
-        let note = message.data[1];
-        let velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
+        let command = (message.data[0] & 0xf0) >> 4;   // Command is the highest nibble
+        let controller = message.data[0] & 0x0f;       // Controller is the lowest nibble
 
-        if (command != PBConst.MIDI.MESSAGES.ACTIVE_SENSING) {
+        if (message.data[0] != PBConst.MIDI.MESSAGES.ACTIVE_SENSING) {
+            let note = message.data[1];
+            let velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
+
             switch (command) {
                 case PBConst.MIDI.MESSAGES.NOTE_ON:
                     (velocity > 0) ? this.noteOnReceived(note, velocity) : this.noteOffReceived(note);
                     break;
                 case PBConst.MIDI.MESSAGES.NOTE_OFF:
                     this.noteOffReceived(note);
+                    break;
+                default:
                     break;
             }
         }
