@@ -79,8 +79,14 @@ class PBConst {
         MESSAGES: {
             // For a list of MIDI messages see:
             // https://www.midi.org/midi/specifications/item/table-1-summary-of-midi-message
-            NOTE_ON: 144,
-            NOTE_OFF: 128,
+            NOTE_OFF: 0x8,
+            NOTE_ON: 0x9,
+            AFTERTOUCH: 0xa,
+            CONTINUOUS_CONTROLLER: 0xb,
+            PATCH_CHANGE: 0xc,
+            CHANNEL_PRESSURE: 0xd,
+            PITCH_BEND: 0xe,
+            NON_MUSICAL_COMMANDS: 0xf,
             ACTIVE_SENSING: 254
         }
     };
