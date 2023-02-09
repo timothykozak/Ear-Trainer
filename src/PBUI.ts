@@ -264,13 +264,13 @@ class PBUI {
     }
 
     transportHideAllElements(isHidden: boolean) {
-        this.transportElements.forEach((element) => {element.style.display = isHidden ? 'none' : 'initial';});
+        this.transportElements.forEach((element) => {element.style.visibility = isHidden ? 'hidden' : 'visible';});
     }
 
     transportShowElements(theElements: TID[]) {
         // Show only the requested elements
         this.transportHideAllElements(true);
-        theElements.forEach((index) => {this.transportElements[index].style.display = 'initial';})
+        theElements.forEach((index) => {this.transportElements[index].style.visibility = 'visible';})
     }
 
 }
