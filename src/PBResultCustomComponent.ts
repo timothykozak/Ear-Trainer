@@ -8,31 +8,36 @@ class PBResultCustomComponent extends HTMLElement {
     static DIV_WIDTH = 40;
 
     shadow: ShadowRoot;
-    wrapperElement: HTMLDivElement;
+    wrapperElement: HTMLDivElement; // The parent element
     valueElement: HTMLDivElement;
     labelElement: HTMLDivElement;
     styleElement: HTMLStyleElement;
+    wrapperX: string;
+    wrapperY: string;
+    wrapperColor: string;
+    fontColor: string;
 
     constructor() {
+        super();// Always call super() first
+        this.buildWrapper();
+        this.buildSubElements();
+        this.buildStyle();
+        this.buildShadowDOM();
+    }
 
-        // Always call super() first
-        super();
-
-        // Create a shadow root
-        this.shadow = this.attachShadow({mode: 'open'});
-
-        // This element wraps all of the other elements and is absolute positioned
+    buildWrapper() {
+        // This element wraps all the other elements and is absolute positioned
         // using attributes defined in the html.
         this.wrapperElement = document.createElement('div');
         this.wrapperElement.setAttribute('class', 'wrapperDiv');
-        let wrapperX = (this.hasAttribute('x')) ? this.getAttribute('x') : 100;
-        let wrapperY = (this.hasAttribute('y')) ? this.getAttribute('y') : 100;
-        let wrapperColor = (this.hasAttribute('backgroundColor')) ? this.getAttribute('backgroundColor') : 'white';
-        let fontColor = (this.hasAttribute('fontColor')) ? this.getAttribute('fontColor') : 'black';
+        this.wrapperX = (this.hasAttribute('x')) ? this.getAttribute('x') : '100';
+        this.wrapperY = (this.hasAttribute('y')) ? this.getAttribute('y') : '100';
+        this.wrapperColor = (this.hasAttribute('backgroundColor')) ? this.getAttribute('backgroundColor') : 'white';
+        this.fontColor = (this.hasAttribute('fontColor')) ? this.getAttribute('fontColor') : 'black';
+    }
 
-
+    buildSubElements() {
         // The element with the numeric value.
-        // Interacts with the slider.
         this.valueElement = document.createElement('div');
         this.valueElement.setAttribute('class', 'valueElement');
 
@@ -40,19 +45,21 @@ class PBResultCustomComponent extends HTMLElement {
         this.labelElement = document.createElement('div');
         this.labelElement.setAttribute('class', 'labelElement');
         this.labelElement.innerText = (this.hasAttribute('label')) ? this.getAttribute('label') : 'None';
+    }
 
+    buildStyle() {
         // Create some CSS to apply to the shadow dom.
         this.styleElement = document.createElement('style');
         this.styleElement.textContent = `
             .wrapperDiv {
                 width: ${PBResultCustomComponent.DIV_WIDTH}px;
                 position: absolute;
-                top: ${wrapperY}px;
-                left: ${wrapperX}px;
+                top: ${this.wrapperY}px;
+                left: ${this.wrapperX}px;
                 text-align: center;
-                border: 1px solid ${fontColor};
-                background: ${wrapperColor};
-                color: ${fontColor};
+                border: 1px solid ${this.fontColor};
+                background: ${this.wrapperColor};
+                color: ${this.fontColor};
             }
             
             .valueElement {
@@ -64,7 +71,10 @@ class PBResultCustomComponent extends HTMLElement {
             }
           }
         `;
+    }
 
+    buildShadowDOM() {
+        this.shadow = this.attachShadow({mode: 'open'});    // Create a shadow root
         // Attach the created elements to the shadow dom
         this.shadow.appendChild(this.styleElement);
         this.shadow.appendChild(this.wrapperElement);

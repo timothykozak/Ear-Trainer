@@ -24,9 +24,13 @@ class PBResultsPage {
         customElements.define('result-component', PBResultCustomComponent);
         this.buildHTML();
         this.getRCCIds();
+        this.initListeners();
+        this.restoreOptions();
+    }
+
+    initListeners() {
         window.addEventListener(PBConst.EVENTS.unload, () => { this.onUnload()});
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
-        this.restoreOptions();
     }
 
     initResults() {
@@ -60,6 +64,7 @@ class PBResultsPage {
             this.theResults[index].numTests++;
             if (theTest.correct)
                 this.theResults[index].numCorrect++;
+            this.theRCCs[index].valueElement.innerText = this.theResults[index].numCorrect + '/' + this.theResults[index].numTests;
         }
     }
 

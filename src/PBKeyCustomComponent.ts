@@ -15,24 +15,32 @@ class PBKeyCustomComponent extends HTMLElement {
     valueElement: HTMLInputElement;
     labelElement: HTMLDivElement;
     styleElement: HTMLStyleElement;
+    wrapperX: string;
+    wrapperY: string;
+    wrapperColor: string;
+    fontColor: string;
     
     constructor() {
+        super();    // Always call super() first
+        this.buildWrapper();
+        this.buildSlider();
+        this.buildValueAndLabel();
+        this.buildStyle();
+        this.buildShadowDOM();
+    }
 
-        // Always call super() first
-        super();
-
-        // Create a shadow root
-        this.shadow = this.attachShadow({mode: 'open'});
-
-        // This element wraps all of the other elements and is absolute positioned
+    buildWrapper() {
+        // This element wraps all the other elements and is absolute positioned
         // using attributes defined in the html.
         this.wrapperElement = document.createElement('div');
         this.wrapperElement.setAttribute('class', 'wrapperDiv');
-        let wrapperX = (this.hasAttribute('x')) ? this.getAttribute('x') : 100;
-        let wrapperY = (this.hasAttribute('y')) ? this.getAttribute('y') : 100;
-        let wrapperColor = (this.hasAttribute('backgroundColor')) ? this.getAttribute('backgroundColor') : 'white';
-        let fontColor = (this.hasAttribute('fontColor')) ? this.getAttribute('fontColor') : 'black';
+        this.wrapperX = (this.hasAttribute('x')) ? this.getAttribute('x') : '100';
+        this.wrapperY = (this.hasAttribute('y')) ? this.getAttribute('y') : '100';
+        this.wrapperColor = (this.hasAttribute('backgroundColor')) ? this.getAttribute('backgroundColor') : 'white';
+        this.fontColor = (this.hasAttribute('fontColor')) ? this.getAttribute('fontColor') : 'black';
+    }
 
+    buildSlider() {
         // This element will hold the actual slider.
         // Need to do this for proper positioning.
         this.sliderDiv = document.createElement('div');
@@ -48,7 +56,9 @@ class PBKeyCustomComponent extends HTMLElement {
         this.sliderElement.setAttribute('max', PBKeyCustomComponent.SLIDER_MAX.toString());
         this.sliderElement.setAttribute('value', '5');
         this.sliderElement.oninput = (event) => {this.valueElement.value = (<HTMLInputElement>event.target).value;};
+    }
 
+    buildValueAndLabel() {
         // The element with the numeric value.
         // Interacts with the slider.
         this.valueElement = document.createElement('input');
@@ -63,19 +73,21 @@ class PBKeyCustomComponent extends HTMLElement {
         this.labelElement = document.createElement('div');
         this.labelElement.setAttribute('class', 'labelElement');
         this.labelElement.innerText = (this.hasAttribute('label')) ? this.getAttribute('label') : 'None';
+    }
 
+    buildStyle() {
         // Create some CSS to apply to the shadow dom.
         this.styleElement = document.createElement('style');
         this.styleElement.textContent = `
             .wrapperDiv {
                 width: ${PBKeyCustomComponent.DIV_WIDTH}px;
                 position: absolute;
-                top: ${wrapperY}px;
-                left: ${wrapperX}px;
+                top: ${this.wrapperY}px;
+                left: ${this.wrapperX}px;
                 text-align: center;
-                border: 1px solid ${fontColor};
-                background: ${wrapperColor};
-                color: ${fontColor};
+                border: 1px solid ${this.fontColor};
+                background: ${this.wrapperColor};
+                color: ${this.fontColor};
             }
             
             .sliderDiv {
@@ -104,7 +116,11 @@ class PBKeyCustomComponent extends HTMLElement {
             }
           }
         `;
+    }
 
+    buildShadowDOM() {
+        // Create a shadow root
+        this.shadow = this.attachShadow({mode: 'open'});
         // Attach the created elements to the shadow dom
         this.shadow.appendChild(this.styleElement);
         this.shadow.appendChild(this.wrapperElement);
