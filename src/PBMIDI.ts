@@ -102,6 +102,7 @@ class PBMIDI {
         // The sequencer has asked that a note be played.
         if (this.available && (this.outputIndex != -1)) {
             let midiMsg = (event.detail.state) ? PBConst.MIDI.MESSAGES.NOTE_ON : PBConst.MIDI.MESSAGES.NOTE_OFF;   // 0x90 is note on, 0x80 is note off
+            midiMsg = midiMsg << 4;
             this.outputs[this.outputIndex].send([midiMsg, event.detail.note, 0x7f]);    // 0x7f is maximum attack
         }
     }
