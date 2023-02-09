@@ -19,13 +19,13 @@ class PBResultCustomComponent extends HTMLElement {
 
     constructor() {
         super();// Always call super() first
-        this.initWrapper();
-        this.initSubElements();
-        this.initStyle();
+        this.buildWrapper();
+        this.buildSubElements();
+        this.buildStyle();
         this.buildShadowDOM();
     }
 
-    initWrapper() {
+    buildWrapper() {
         // This element wraps all the other elements and is absolute positioned
         // using attributes defined in the html.
         this.wrapperElement = document.createElement('div');
@@ -36,7 +36,7 @@ class PBResultCustomComponent extends HTMLElement {
         this.fontColor = (this.hasAttribute('fontColor')) ? this.getAttribute('fontColor') : 'black';
     }
 
-    initSubElements() {
+    buildSubElements() {
         // The element with the numeric value.
         this.valueElement = document.createElement('div');
         this.valueElement.setAttribute('class', 'valueElement');
@@ -47,7 +47,7 @@ class PBResultCustomComponent extends HTMLElement {
         this.labelElement.innerText = (this.hasAttribute('label')) ? this.getAttribute('label') : 'None';
     }
 
-    initStyle() {
+    buildStyle() {
         // Create some CSS to apply to the shadow dom.
         this.styleElement = document.createElement('style');
         this.styleElement.textContent = `
