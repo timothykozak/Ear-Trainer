@@ -4,13 +4,17 @@
 // of the tests.
 
 
+import {PBResultsPage} from "./PBResultsPage";
+
 class PBResultCustomComponent extends HTMLElement {
     static DIV_WIDTH = 40;
+    static METER_HEIGHT = 100;
 
     shadow: ShadowRoot;
     wrapperElement: HTMLDivElement; // The parent element
-    valueElement: HTMLDivElement;
-    labelElement: HTMLDivElement;
+    meterDiv: HTMLDivElement;
+    meterElement: HTMLMeterElement;
+    labelElement: HTMLSpanElement;
     styleElement: HTMLStyleElement;
     wrapperX: string;
     wrapperY: string;
@@ -37,12 +41,21 @@ class PBResultCustomComponent extends HTMLElement {
     }
 
     buildSubElements() {
-        // The element with the numeric value.
-        this.valueElement = document.createElement('div');
-        this.valueElement.setAttribute('class', 'valueElement');
+        // Contains the meter
+        this.meterDiv = document.createElement('div');
+        this.meterDiv.setAttribute('class', 'meterDiv');
+
+        // The meter
+        this.meterElement = document.createElement('meter');
+        this.meterElement.setAttribute('class', 'meterElement');
+        this.meterElement.setAttribute('min', '0.0');
+        this.meterElement.setAttribute('max', '1.0');
+        this.meterElement.setAttribute('low', '0.33');
+        this.meterElement.setAttribute('high', '0.66');
+        this.meterElement.setAttribute('value', '0.0');
 
         // Just a static label that is set in the html.
-        this.labelElement = document.createElement('div');
+        this.labelElement = document.createElement('span');
         this.labelElement.setAttribute('class', 'labelElement');
         this.labelElement.innerText = (this.hasAttribute('label')) ? this.getAttribute('label') : 'None';
     }
@@ -62,8 +75,17 @@ class PBResultCustomComponent extends HTMLElement {
                 color: ${this.fontColor};
             }
             
-            .valueElement {
-                width: ${PBResultCustomComponent.DIV_WIDTH - 10}px;
+            .meterDiv {
+                width: ${PBResultCustomComponent.DIV_WIDTH}px;
+                height: ${PBResultCustomComponent.METER_HEIGHT}px;
+                padding-bottom: 5px;
+            }
+            
+            .meterElement {
+                width: ${PBResultCustomComponent.METER_HEIGHT}px;
+                height: ${PBResultCustomComponent.DIV_WIDTH}px;
+                transform-origin: ${PBResultCustomComponent.METER_HEIGHT / 2}px ${PBResultCustomComponent.METER_HEIGHT / 2}px;
+                transform: rotate(-90deg);
             }
             
             .labelElement {
@@ -78,7 +100,8 @@ class PBResultCustomComponent extends HTMLElement {
         // Attach the created elements to the shadow dom
         this.shadow.appendChild(this.styleElement);
         this.shadow.appendChild(this.wrapperElement);
-        this.wrapperElement.appendChild(this.valueElement);
+        this.meterDiv.appendChild(this.meterElement);
+        this.wrapperElement.appendChild(this.meterDiv);
         this.wrapperElement.appendChild(this.labelElement);
     }
 }
