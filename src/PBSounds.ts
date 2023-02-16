@@ -2,7 +2,7 @@
 // PBSounds.ts
 //
 // This class downloads INSTRUMENT_FILE_NAME, which has information on all sounds on the server
-// An instrument has notes B3 through C5 inclusive.  These are separate files that are downloaded.
+// An instrument has notes A#3 through C#5 inclusive.  These are separate files that are downloaded.
 // This class listens to the sequencer and plays the sequenced notes.
 //
 
@@ -73,10 +73,9 @@ class PBSounds {
         })
     }
 
-    updateSoundsRequested() {
+    checkInstrumentDownloadComplete() {
         // If all sounds have been requested, then dispatch instrument is loaded event.
-        this.soundsRequested++;
-        if (this.soundsRequested > (PBConst.MIDI.HIGH.SOUND - PBConst.MIDI.LOW.SOUND)) {  // All download requests are finished.
+        if (this.soundsAvailable == this.soundsRequested) {
             this.allSoundsLoaded = true;
             document.dispatchEvent(new Event(PBConst.EVENTS.soundsInstrumentLoaded));
             this.msgWindow.writeMsg("Instrument loaded.");
@@ -94,8 +93,6 @@ class PBSounds {
         }).then((theArrayBuffer: ArrayBuffer) => {  // Try to decode it.
             return(this.context.decodeAudioData(theArrayBuffer))
         }).then((decodedData: AudioBuffer) => { // Everything is good, add it to the sounds array.
-            this.soundsAvailable++;
-            this.updateSoundsRequested();
             let fileName = url.match(PBSounds.MIDI_FILE_REG_EXP)[0];    // Figure out which note it is.
             let midiNote = Number(fileName.match(/\d+/)[0]);
             let sound = this.sounds[midiNote];  // Put it in the array.
@@ -103,6 +100,9 @@ class PBSounds {
             sound.buffer = decodedData;
             sound.source.buffer = decodedData;
             sound.playing = false;
+
+            this.soundsAvailable++;
+            this.checkInstrumentDownloadComplete();
         }).catch((error: Error) => {
             this.msgWindow.writeErr('Could not retrieve ' + url + ': ' + error.message);
         })
@@ -132,6 +132,7 @@ class PBSounds {
         this.soundsAvailable = 0;
         this.soundsRequested = 0;
         for (let i = PBConst.MIDI.LOW.SOUND; i <= PBConst.MIDI.HIGH.SOUND; i++) {    // Get the entire range
+            this.soundsRequested++;
             this.loadASound(instrument.url + i + ".mp3");
         }
     }
