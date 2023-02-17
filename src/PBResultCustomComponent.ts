@@ -14,6 +14,7 @@ class PBResultCustomComponent extends HTMLElement {
     wrapperElement: HTMLDivElement; // The parent element
     meterDiv: HTMLDivElement;
     meterElement: HTMLMeterElement;
+    meterFraction: HTMLSpanElement;
     labelElement: HTMLSpanElement;
     styleElement: HTMLStyleElement;
     wrapperX: string;
@@ -52,7 +53,11 @@ class PBResultCustomComponent extends HTMLElement {
         this.meterElement.setAttribute('max', '1.0');
         this.meterElement.setAttribute('low', '0.33');
         this.meterElement.setAttribute('high', '0.66');
+        this.meterElement.setAttribute('optimum', '0.7');
         this.meterElement.setAttribute('value', '0.0');
+
+        this.meterFraction = document.createElement('span');
+        this.meterFraction.setAttribute('class', 'meterFraction');
 
         // Just a static label that is set in the html.
         this.labelElement = document.createElement('span');
@@ -88,6 +93,12 @@ class PBResultCustomComponent extends HTMLElement {
                 transform: rotate(-90deg);
             }
             
+            .meterFraction {
+                position: absolute;
+                top: ${PBResultCustomComponent.METER_HEIGHT / 2}px;
+                left: 12px;
+            }
+            
             .labelElement {
                 display-inline: block;
             }
@@ -101,8 +112,19 @@ class PBResultCustomComponent extends HTMLElement {
         this.shadow.appendChild(this.styleElement);
         this.shadow.appendChild(this.wrapperElement);
         this.meterDiv.appendChild(this.meterElement);
+        this.meterDiv.appendChild(this.meterFraction);
         this.wrapperElement.appendChild(this.meterDiv);
         this.wrapperElement.appendChild(this.labelElement);
+    }
+
+    updateResults(numCorrect: number, numTests: number) {
+        this.meterElement.value = (numTests == 0) ? 0 : numCorrect / numTests;
+        this.meterFraction.innerHTML = `  <math>
+                                            <mfrac>
+                                              <mn>${numCorrect}</mn>
+                                              <mn>${numTests}</mn>
+                                            </mfrac>
+                                          </math>`;
     }
 }
 
