@@ -95,8 +95,10 @@ class PBResultCustomComponent extends HTMLElement {
             
             .meterFraction {
                 position: absolute;
-                top: ${PBResultCustomComponent.METER_HEIGHT / 2}px;
-                left: 12px;
+                top: 50%;
+                left: 20%;
+                right: 20%;
+                color: black;
             }
             
             .labelElement {
