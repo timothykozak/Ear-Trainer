@@ -14,6 +14,7 @@ class PBResultCustomComponent extends HTMLElement {
     wrapperElement: HTMLDivElement; // The parent element
     meterDiv: HTMLDivElement;
     meterElement: HTMLMeterElement;
+    meterFractionDiv: HTMLDivElement;
     meterFraction: HTMLSpanElement;
     labelElement: HTMLSpanElement;
     styleElement: HTMLStyleElement;
@@ -56,6 +57,9 @@ class PBResultCustomComponent extends HTMLElement {
         this.meterElement.setAttribute('optimum', '0.7');
         this.meterElement.setAttribute('value', '0.0');
 
+        this.meterFractionDiv = document.createElement('div');
+        this.meterFractionDiv.setAttribute('class', 'meterFractionDiv');
+
         this.meterFraction = document.createElement('span');
         this.meterFraction.setAttribute('class', 'meterFraction');
 
@@ -93,11 +97,18 @@ class PBResultCustomComponent extends HTMLElement {
                 transform: rotate(-90deg);
             }
             
-            .meterFraction {
+            .meterFractionDiv {
                 position: absolute;
                 top: 50%;
-                left: 20%;
-                right: 20%;
+                left: 30%;
+                right: 30%;
+                background-color: #ddd;
+                border-radius: 4px 4px 4px 4px;
+                padding: 2px 0px;
+            }
+            
+            .meterFraction {
+                position: relative;
                 color: black;
             }
             
@@ -114,7 +125,8 @@ class PBResultCustomComponent extends HTMLElement {
         this.shadow.appendChild(this.styleElement);
         this.shadow.appendChild(this.wrapperElement);
         this.meterDiv.appendChild(this.meterElement);
-        this.meterDiv.appendChild(this.meterFraction);
+        this.meterFractionDiv.appendChild(this.meterFraction);
+        this.meterDiv.appendChild(this.meterFractionDiv);
         this.wrapperElement.appendChild(this.meterDiv);
         this.wrapperElement.appendChild(this.labelElement);
     }
