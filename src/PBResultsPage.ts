@@ -25,7 +25,7 @@ class PBResultsPage {
         this.buildHTML();
         this.getRCCIds();
         this.initListeners();
-        this.restoreOptions();
+        this.restoreResults();
     }
 
     initListeners() {
@@ -40,16 +40,17 @@ class PBResultsPage {
         }
     }
 
-    clearResults() {
-        this.initResults();
+    updateMeterValue(index: number) {
+        this.theRCCs[index].updateResults(this.theResults[index].numCorrect, this.theResults[index].numTests);
     }
 
-    restoreOptions() {
+    restoreResults() {
         // Need to get the options from the browser.
         this.theResults = JSON.parse(localStorage.getItem(PBConst.STORAGE.statsPage));
         if (!this.theResults) {
             this.initResults();
         }
+        this.theResults.forEach((element, index) => {this.updateMeterValue(index);} )
     }
 
     onUnload(){
@@ -64,7 +65,7 @@ class PBResultsPage {
             this.theResults[index].numTests++;
             if (theTest.correct)
                 this.theResults[index].numCorrect++;
-            this.theRCCs[index].meterElement.value =  this.theResults[index].numCorrect / this.theResults[index].numTests;
+            this.updateMeterValue(index);
         }
     }
 
@@ -72,7 +73,7 @@ class PBResultsPage {
         // The HTML to build the page.
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
-                <input type="button" value="Clear Results" onclick="window.pbEarTrainer.ui.results.clearResults();">
+                <input type="button" value="Clear Results" onclick="window.pbEarTrainer.ui.results.initResults();">
                 <result-component id="idResultCC_C" x="100" y="200" label="C" ></result-component>
                 <result-component id="idResultCC_D" x="140" y="200" label="D" ></result-component>
                 <result-component id="idResultCC_E" x="180" y="200" label="E" ></result-component>
