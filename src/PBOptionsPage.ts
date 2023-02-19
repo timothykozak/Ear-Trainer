@@ -27,6 +27,7 @@ class PBOptionsPage {
     isDirty: boolean;   // Changes have been made.
 
     constructor(public statusWindow: PBStatusWindow, public parentHTMLDiv: HTMLDivElement, public tester: PBTester) {
+        this.initListeners();
         customElements.define('key-component', PBKeyCustomComponent);
         this.buildHTML();
         this.getKCCs();
@@ -34,6 +35,14 @@ class PBOptionsPage {
         window.addEventListener(PBConst.EVENTS.unload, () => { this.onUnload()});
         this.restoreOptions();
         this.isDirty = false;
+    }
+
+    initListeners() {
+        document.addEventListener(PBConst.EVENTS.optionsCreateTests, (event: CustomEvent) => {this.onCreateTests(event)}, false);
+    }
+
+    onCreateTests(event: CustomEvent) {
+        this.createStandardTest(event.detail);
     }
 
     restoreOptions() {
@@ -88,11 +97,16 @@ class PBOptionsPage {
         // The HTML to build the page.
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
-                <input type="button" value="None" onclick="window.pbEarTrainer.ui.options.createStandardTest(0);">
-                <input type="button" value="I IV V" onclick="window.pbEarTrainer.ui.options.createStandardTest(1);">
-                <input type="button" value="White" onclick="window.pbEarTrainer.ui.options.createStandardTest(2);">
-                <input type="button" value="Black" onclick="window.pbEarTrainer.ui.options.createStandardTest(3);">
-                <input type="button" value="All" onclick="window.pbEarTrainer.ui.options.createStandardTest(4);">
+                <input type="button" value="None" 
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 0}));">
+                <input type="button" value="I IV V" 
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 1}));">
+                <input type="button" value="White"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 2}));">
+                <input type="button" value="Black"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 3}));">
+                <input type="button" value="All"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 4}));">
                 <key-component id="idKeyCC_C" x="100" y="200" label="C" ></key-component>
                 <key-component id="idKeyCC_D" x="140" y="200" label="D" ></key-component>
                 <key-component id="idKeyCC_E" x="180" y="200" label="E" ></key-component>
