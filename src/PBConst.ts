@@ -19,6 +19,8 @@ class PBConst {
 
         keyboardHover: "PBKeyboardHover",                       // event.detail = note
 
+        handleMenu: "PBHandleMenu",                             // event.detail = PBUI.MP_?
+
         mouseLeave: "mouseleave",
         mouseMove: "mousemove",
         mouseClick: "click",
@@ -62,7 +64,8 @@ class PBConst {
         home:               {value: '\u{0f384}', rem: 0.3},
         graph:              {value: '\u{0f2b5}', rem: 0.3},
         gitHub:             {value: '\u{0f233}', rem: 0.3},
-        hamburger:          {value: '\u{0f20d}', rem: 0.3}
+        hamburger:          {value: '\u{0f20d}', rem: 0.3},
+        notes:              {value: '\u{0f20c}', rem: 0.3}
     };
 
     static MIDI = {
