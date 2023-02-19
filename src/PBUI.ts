@@ -74,6 +74,7 @@ class PBUI {
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.onTestFinished(event);}, false);
+        document.addEventListener(PBConst.EVENTS.handleMenu, (event: CustomEvent) => {this.onHandleMenu(event);}, false);
     }
 
     onCadenceStarted(event: CustomEvent) {
@@ -108,6 +109,10 @@ class PBUI {
         this.tester.stopTest();
     }
 
+    onHandleMenu(event: CustomEvent) {
+        this.handleMenu(event.detail);
+    }
+
     static buildCanvasHTML(): string {
         return (`<canvas id="theCanvas" style="position: absolute;"></canvas>`);
     }
@@ -123,18 +128,23 @@ class PBUI {
     }
 
     static buildMenuHTML(): string {
-        return(`        <div class="menuDiv">
-            <ul>
-                <li id="${'MLI' + (PBUI.MP_HOME + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_HOME});">
-                    &#xf20d<span class="toolTipText toolTipTextRight">Home</span></li>
-                <li id="${'MLI' + (PBUI.MP_OPTIONS + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_OPTIONS});">
-                    &#xf2f7<span class="toolTipText toolTipTextRight">Settings</span></li>
-                <li id="${'MLI' + (PBUI.MP_STATS + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_STATS});">
-                    &#xf2b5<span class="toolTipText toolTipTextRight">Results</span></li>
-                <li id="${'MLI' + (PBUI.MP_HELP + 1)}" class="toolTip" onclick="window.pbEarTrainer.ui.handleMenu(${PBUI.MP_HELP});">
-                    &#xf444<span class="toolTipText toolTipTextRight">Help</span></li>
-            </ul>
-        </div>
+        return(`
+            <div class="menuDiv">
+                <ul>
+                    <li id="${'MLI' + (PBUI.MP_HOME + 1)}" class="toolTip"
+                        onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.handleMenu}', {detail: ${PBUI.MP_HOME}}));">
+                        &#xf20c<span class="toolTipText toolTipTextRight">Home</span></li>
+                    <li id="${'MLI' + (PBUI.MP_OPTIONS + 1)}" class="toolTip"
+                        onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.handleMenu}', {detail: ${PBUI.MP_OPTIONS}}));">
+                        &#xf2f7<span class="toolTipText toolTipTextRight">Settings</span></li>
+                    <li id="${'MLI' + (PBUI.MP_STATS + 1)}" class="toolTip"
+                        onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.handleMenu}', {detail: ${PBUI.MP_STATS}}));">
+                        &#xf2b5<span class="toolTipText toolTipTextRight">Results</span></li>
+                    <li id="${'MLI' + (PBUI.MP_HELP + 1)}" class="toolTip"
+                        onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.handleMenu}', {detail: ${PBUI.MP_HELP}}));">
+                        &#xf444<span class="toolTipText toolTipTextRight">Help</span></li>
+                </ul>
+            </div>
         `);
     }
 
@@ -167,15 +177,15 @@ class PBUI {
     }
 
     static buildHelpPageHTML(): string {
-        return(`<div id="theHelpPage" class="pageDiv" style="background-color: #dddddd;">
-<div class="helpTitle">Ear Trainer</div>
-<div>The web app uses the Bruce Arnold method of training the ear to recognize a note relative to the key.</div>
-<div class="helpTitle">Acknowledgements</div>
-<div>The piano samples were downloaded from: </div>
-<div>The audio samples were manipulated with Audacity.</div>
-<div>The font for the menu and the transport was downloaded from:</div>
-<div>This code is written in TypeScript.</div>
-</div>`);
+        return(`<div id="theHelpPage" class="pageDiv" style="background-color: #eeeeee;">
+                <div class="helpTitle">Ear Trainer</div>
+                <div>The web app uses the Bruce Arnold method of training the ear to recognize a note relative to the key.</div>
+                <div class="helpTitle">Acknowledgements</div>
+                <div>The piano samples were downloaded from: </div>
+                <div>The audio samples were manipulated with Audacity.</div>
+                <div>The font for the menu and the transport was downloaded from:</div>
+                <div>This code is written in TypeScript.</div>
+                </div>`);
     }
 
     static buildPagesHTML() : string {
