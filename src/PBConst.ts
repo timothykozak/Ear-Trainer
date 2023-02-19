@@ -21,6 +21,8 @@ class PBConst {
 
         handleMenu: "PBHandleMenu",                             // event.detail = PBUI.MP_?
 
+        optionsCreateTests: 'PBCreateTests',                    // event.detail = standard tests
+
         mouseLeave: "mouseleave",
         mouseMove: "mousemove",
         mouseClick: "click",
