@@ -25,6 +25,8 @@ class PBConst {
 
         resultsReset: "PBResetResults",                         // event.detail = undefined
 
+        transportButton: "PBTransportButton",                   // event.detail = PBUI.TB_?
+
         mouseLeave: "mouseleave",
         mouseMove: "mousemove",
         mouseClick: "click",
