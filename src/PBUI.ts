@@ -38,6 +38,8 @@ class PBUI {
     static MP_OPTIONS = 0;  // The Options menu page
     static MP_STATS = 1;    // The Stats menu page
     static MP_HELP = 2;     // The Help menu page
+    static TB_START = 0;    // Start transport button
+    static TB_STOP = 1;     // Stop transport button
 
     canvas: HTMLCanvasElement; // The drawing canvas for both notation and keyboard
     options: PBOptionsPage;
@@ -75,6 +77,7 @@ class PBUI {
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.onTestFinished(event);}, false);
         document.addEventListener(PBConst.EVENTS.handleMenu, (event: CustomEvent) => {this.onHandleMenu(event);}, false);
+        document.addEventListener(PBConst.EVENTS.transportButton, (event: CustomEvent) => (this.onTransportButton(event), false));
     }
 
     onCadenceStarted(event: CustomEvent) {
@@ -95,7 +98,18 @@ class PBUI {
         this.transportShowElements([TID.Start]);
     }
 
-    onStartButtonClicked(event: MouseEvent) {
+    onHandleMenu(event: CustomEvent) {
+        this.handleMenu(event.detail);
+    }
+
+    onTransportButton(event: CustomEvent) {
+        if (event.detail == PBUI.TB_START)
+            this.startButtonClicked();
+        else if (event.detail == PBUI.TB_STOP)
+            this.stopButtonClicked();
+    }
+
+    startButtonClicked() {
         if (this.tester.testRunning) {
             if (this.tester.waitingForAnswer)
                 this.transportShowElements([TID.Stop]);
@@ -105,12 +119,8 @@ class PBUI {
             this.tester.startTest();
     }
 
-    onStopButtonClicked(event: MouseEvent) {
+    stopButtonClicked() {
         this.tester.stopTest();
-    }
-
-    onHandleMenu(event: CustomEvent) {
-        this.handleMenu(event.detail);
     }
 
     static buildCanvasHTML(): string {
@@ -121,8 +131,12 @@ class PBUI {
         return(`<div class="transportDiv">
             <div id="transportStats" class="resultsDiv"></div>
             <ul>
-                <li id="transportStop" class="toolTip" onclick="window.pbEarTrainer.ui.onStopButtonClicked();">&#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
-                <li id="transportStart" class="toolTip" onclick="window.pbEarTrainer.ui.onStartButtonClicked();">&#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
+                <li id="transportStop" class="toolTip"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.transportButton}', {detail: ${PBUI.TB_STOP}}));">
+                    &#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
+                <li id="transportStart" class="toolTip"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.transportButton}', {detail: ${PBUI.TB_START}}));">
+                    &#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
             </ul>
         </div>        `);
     }
