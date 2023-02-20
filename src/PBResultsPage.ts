@@ -31,26 +31,7 @@ class PBResultsPage {
     initListeners() {
         window.addEventListener(PBConst.EVENTS.unload, () => { this.onUnload()});
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
-    }
-
-    initResults() {
-        this.theResults = [];
-        for (let index = 0; index < PBResultsPage.ITEMS_PER_OCTAVE; index++) {
-            this.theResults.push({numTests: 0, numCorrect: 0});
-        }
-    }
-
-    updateMeterValue(index: number) {
-        this.theRCCs[index].updateResults(this.theResults[index].numCorrect, this.theResults[index].numTests);
-    }
-
-    restoreResults() {
-        // Need to get the options from the browser.
-        this.theResults = JSON.parse(localStorage.getItem(PBConst.STORAGE.statsPage));
-        if (!this.theResults) {
-            this.initResults();
-        }
-        this.theResults.forEach((element, index) => {this.updateMeterValue(index);} )
+        document.addEventListener(PBConst.EVENTS.resultsReset, (event: CustomEvent) => {this.onInitResults(event);}, false);
     }
 
     onUnload(){
@@ -69,11 +50,41 @@ class PBResultsPage {
         }
     }
 
+    onInitResults(event: CustomEvent) {
+        this.initResults();
+        this.updateAllMeterValues();
+    }
+
+    initResults() {
+        this.theResults = [];
+        for (let index = 0; index < PBResultsPage.ITEMS_PER_OCTAVE; index++) {
+            this.theResults.push({numTests: 0, numCorrect: 0});
+        }
+    }
+
+    updateMeterValue(index: number) {
+        this.theRCCs[index].updateResults(this.theResults[index].numCorrect, this.theResults[index].numTests);
+    }
+
+    updateAllMeterValues() {
+        this.theResults.forEach((element, index) => {this.updateMeterValue(index);} )
+    }
+
+    restoreResults() {
+        // Need to get the options from the browser.
+        this.theResults = JSON.parse(localStorage.getItem(PBConst.STORAGE.statsPage));
+        if (!this.theResults) {
+            this.initResults();
+        }
+        this.updateAllMeterValues();
+    }
+
     buildHTML(){
         // The HTML to build the page.
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
-                <input type="button" value="Clear Results" onclick="window.pbEarTrainer.ui.results.initResults();">
+                <input type="button" value="Clear Results"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.resultsReset}', {detail: null}));">
                 <result-component id="idResultCC_C" x="100" y="200" label="C" ></result-component>
                 <result-component id="idResultCC_D" x="140" y="200" label="D" ></result-component>
                 <result-component id="idResultCC_E" x="180" y="200" label="E" ></result-component>
