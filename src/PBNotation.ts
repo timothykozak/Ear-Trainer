@@ -4,9 +4,8 @@
 // This module handles the musical notation.  It is passed an HTMLCanvasElement
 // on which it draws out the treble staff in the key of C Major.
 
-import {SequenceItem} from "./PBSequencer.js";
+import {SequenceItem, NoteType} from "./PBSequencer.js";
 import {PBConst} from "./PBConst.js";
-import {NoteType} from "./PBSequencer.js";
 import {PBUI, MyRect} from "./PBUI.js";
 import {TestItem} from "./PBTester.js";
 
