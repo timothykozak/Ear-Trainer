@@ -77,7 +77,7 @@ class PBUI {
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.onTestFinished(event);}, false);
         document.addEventListener(PBConst.EVENTS.handleMenu, (event: CustomEvent) => {this.onHandleMenu(event);}, false);
-        document.addEventListener(PBConst.EVENTS.transportButton, (event: CustomEvent) => (this.onTransportButton(event), false));
+        document.addEventListener(PBConst.EVENTS.transportButton, (event: CustomEvent) => {this.onTransportButton(event);}, false);
     }
 
     onCadenceStarted(event: CustomEvent) {
