@@ -18,7 +18,7 @@ import {PBPianoKeyboard} from "./PBPianoKeyboard.js";
 import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBOptionsPage} from "./PBOptionsPage.js";
 import {PBResultsPage} from "./PBResultsPage.js";
-import {PBTester, TestItem, TestResults} from "./PBTester";
+import {PBTester, TestResults} from "./PBTester";
 
 interface MyRect {
     x: number, // Of the upper left corner
