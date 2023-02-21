@@ -3,8 +3,6 @@
 //
 // Constants used throughout the project
 
-import {SequenceItem} from "./PBSequencer";
-
 class PBConst {
     static EVENTS = {
         sequencerNotePlayed: "PBSequencerNotePlayed",           // event.detail {SequenceItem}
