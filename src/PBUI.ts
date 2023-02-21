@@ -214,10 +214,10 @@ class PBUI {
         this.pageContainer = document.getElementById("thePageContainer") as HTMLDivElement;
         this.pageContainer.style.visibility = 'hidden';
         let optionsHTML = document.getElementById("theOptionsPage") as HTMLDivElement;
-        this.options = new PBOptionsPage(this.statusWindow, optionsHTML, this.tester);
+        this.options = new PBOptionsPage(optionsHTML, this.tester);
         this.pages[PBUI.MP_OPTIONS] = optionsHTML;
         let statsHTML = document.getElementById("theStatsPage") as HTMLDivElement;
-        this.results = new PBResultsPage(this.statusWindow, statsHTML);
+        this.results = new PBResultsPage(statsHTML);
         this.pages[PBUI.MP_STATS]  = statsHTML;
         this.pages[PBUI.MP_HELP]  = document.getElementById("theHelpPage") as HTMLDivElement;
     }
