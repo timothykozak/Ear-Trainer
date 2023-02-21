@@ -4,8 +4,6 @@
 // of the tests.
 
 
-import {PBResultsPage} from "./PBResultsPage";
-
 class PBResultCustomComponent extends HTMLElement {
     static DIV_WIDTH = 40;
     static METER_HEIGHT = 100;
