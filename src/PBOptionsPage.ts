@@ -7,7 +7,6 @@
 //
 
 import {PBConst} from "./PBConst.js";
-import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBTester} from "./PBTester.js";
 import {PBKeyCustomComponent} from "./PBKeyCustomComponent.js";
 
@@ -26,7 +25,7 @@ class PBOptionsPage {
     theKCCs: PBKeyCustomComponent[];  // The key custom components (KCC).
     isDirty: boolean;   // Changes have been made.
 
-    constructor(public statusWindow: PBStatusWindow, public parentHTMLDiv: HTMLDivElement, public tester: PBTester) {
+    constructor(public parentHTMLDiv: HTMLDivElement, public tester: PBTester) {
         this.initListeners();
         customElements.define('key-component', PBKeyCustomComponent);
         this.buildHTML();
@@ -152,13 +151,6 @@ class PBOptionsPage {
         // Set the values for the key custom components
         this.theKCCs.forEach((theKCC, index) => {
             theKCC.value = this.theOptions.noteFrequency[index];
-        });
-    }
-
-    getKCCValues() {
-        // Get the values from the key custom components and update the noteFrequency.
-        this.theKCCs.forEach((theKCC, index) => {
-            this.theOptions.noteFrequency[index] = theKCC.value;
         });
     }
 }
