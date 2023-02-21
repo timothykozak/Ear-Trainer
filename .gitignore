@@ -2,4 +2,5 @@
 # Build Folder
 built/
 .idea/workspace.xml
+.idea/php.xml
 svg/
