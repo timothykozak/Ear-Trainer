@@ -4,9 +4,8 @@
 // saved/restored in the browser.
 //
 
-import {TestItem, TestResults} from "./PBTester.js";
+import {TestItem} from "./PBTester.js";
 import {PBConst} from "./PBConst.js";
-import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBResultCustomComponent} from "./PBResultCustomComponent.js";
 
 interface ResultItem {
@@ -20,7 +19,7 @@ class PBResultsPage {
     theResults: Array<ResultItem>;
     theRCCs: Array<PBResultCustomComponent>;    // The results custom components.
 
-    constructor(public statusWindow: PBStatusWindow, public parentHTMLDiv: HTMLDivElement) {
+    constructor(public parentHTMLDiv: HTMLDivElement) {
         customElements.define('result-component', PBResultCustomComponent);
         this.buildHTML();
         this.getRCCIds();
