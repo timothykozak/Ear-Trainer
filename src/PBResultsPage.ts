@@ -25,31 +25,13 @@ class PBResultsPage {
         this.buildHTML();
         this.getRCCIds();
         this.initListeners();
-        this.restoreOptions();
+        this.restoreResults();
     }
 
     initListeners() {
         window.addEventListener(PBConst.EVENTS.unload, () => { this.onUnload()});
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
-    }
-
-    initResults() {
-        this.theResults = [];
-        for (let index = 0; index < PBResultsPage.ITEMS_PER_OCTAVE; index++) {
-            this.theResults.push({numTests: 0, numCorrect: 0});
-        }
-    }
-
-    clearResults() {
-        this.initResults();
-    }
-
-    restoreOptions() {
-        // Need to get the options from the browser.
-        this.theResults = JSON.parse(localStorage.getItem(PBConst.STORAGE.statsPage));
-        if (!this.theResults) {
-            this.initResults();
-        }
+        document.addEventListener(PBConst.EVENTS.resultsReset, (event: CustomEvent) => {this.onInitResults(event);}, false);
     }
 
     onUnload(){
@@ -64,34 +46,64 @@ class PBResultsPage {
             this.theResults[index].numTests++;
             if (theTest.correct)
                 this.theResults[index].numCorrect++;
-            this.theRCCs[index].valueElement.innerText = this.theResults[index].numCorrect + '/' + this.theResults[index].numTests;
+            this.updateMeterValue(index);
         }
+    }
+
+    onInitResults(event: CustomEvent) {
+        this.initResults();
+        this.updateAllMeterValues();
+    }
+
+    initResults() {
+        this.theResults = [];
+        for (let index = 0; index < PBResultsPage.ITEMS_PER_OCTAVE; index++) {
+            this.theResults.push({numTests: 0, numCorrect: 0});
+        }
+    }
+
+    updateMeterValue(index: number) {
+        this.theRCCs[index].updateResults(this.theResults[index].numCorrect, this.theResults[index].numTests);
+    }
+
+    updateAllMeterValues() {
+        this.theResults.forEach((element, index) => {this.updateMeterValue(index);} )
+    }
+
+    restoreResults() {
+        // Need to get the options from the browser.
+        this.theResults = JSON.parse(localStorage.getItem(PBConst.STORAGE.statsPage));
+        if (!this.theResults) {
+            this.initResults();
+        }
+        this.updateAllMeterValues();
     }
 
     buildHTML(){
         // The HTML to build the page.
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
-                <input type="button" value="Clear Results" onclick="window.pbEarTrainer.ui.results.clearResults();">
-                <result-component id="idC" x="100" y="200" label="C" ></result-component>
-                <result-component id="idD" x="140" y="200" label="D" ></result-component>
-                <result-component id="idE" x="180" y="200" label="E" ></result-component>
-                <result-component id="idF" x="220" y="200" label="F" ></result-component>
-                <result-component id="idG" x="260" y="200" label="G" ></result-component>
-                <result-component id="idA" x="300" y="200" label="A" ></result-component>
-                <result-component id="idB" x="340" y="200" label="B" ></result-component>
-                <result-component id="idC#" x="120" y="50" label="C#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idD#" x="160" y="50" label="D#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idF#" x="240" y="50" label="F#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idG#" x="280" y="50" label="G#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idA#" x="320" y="50" label="A#" backgroundColor="black" fontColor="white"></result-component>
+                <input type="button" value="Clear Results"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.resultsReset}', {detail: null}));">
+                <result-component id="idResultCC_C" x="100" y="200" label="C" ></result-component>
+                <result-component id="idResultCC_D" x="140" y="200" label="D" ></result-component>
+                <result-component id="idResultCC_E" x="180" y="200" label="E" ></result-component>
+                <result-component id="idResultCC_F" x="220" y="200" label="F" ></result-component>
+                <result-component id="idResultCC_G" x="260" y="200" label="G" ></result-component>
+                <result-component id="idResultCC_A" x="300" y="200" label="A" ></result-component>
+                <result-component id="idResultCC_B" x="340" y="200" label="B" ></result-component>
+                <result-component id="idResultCC_C#" x="120" y="50" label="C#" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_D#" x="160" y="50" label="D#" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_F#" x="240" y="50" label="F#" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_G#" x="280" y="50" label="G#" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_A#" x="320" y="50" label="A#" backgroundColor="black" fontColor="white"></result-component>
             </div>
             `);
     }
 
     getRCCIds() {
         // Get the results custom components
-        let theNames: string[] = ['idC', 'idC#', 'idD', 'idD#', 'idE', 'idF', 'idF#', 'idG', 'idG#', 'idA', 'idA#', 'idB'];
+        let theNames: string[] = ['idResultCC_C', 'idResultCC_C#', 'idResultCC_D', 'idResultCC_D#', 'idResultCC_E', 'idResultCC_F', 'idResultCC_F#', 'idResultCC_G', 'idResultCC_G#', 'idResultCC_A', 'idResultCC_A#', 'idResultCC_B'];
         this.theRCCs = [];
         theNames.forEach((theName, index) => {this.theRCCs[index] = document.getElementById(theName) as PBResultCustomComponent;});
     }

@@ -27,6 +27,7 @@ class PBOptionsPage {
     isDirty: boolean;   // Changes have been made.
 
     constructor(public statusWindow: PBStatusWindow, public parentHTMLDiv: HTMLDivElement, public tester: PBTester) {
+        this.initListeners();
         customElements.define('key-component', PBKeyCustomComponent);
         this.buildHTML();
         this.getKCCs();
@@ -34,6 +35,14 @@ class PBOptionsPage {
         window.addEventListener(PBConst.EVENTS.unload, () => { this.onUnload()});
         this.restoreOptions();
         this.isDirty = false;
+    }
+
+    initListeners() {
+        document.addEventListener(PBConst.EVENTS.optionsCreateTests, (event: CustomEvent) => {this.onCreateTests(event)}, false);
+    }
+
+    onCreateTests(event: CustomEvent) {
+        this.createStandardTest(event.detail);
     }
 
     restoreOptions() {
@@ -88,30 +97,35 @@ class PBOptionsPage {
         // The HTML to build the page.
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
-                <input type="button" value="None" onclick="window.pbEarTrainer.ui.options.createStandardTest(0);">
-                <input type="button" value="I IV V" onclick="window.pbEarTrainer.ui.options.createStandardTest(1);">
-                <input type="button" value="White" onclick="window.pbEarTrainer.ui.options.createStandardTest(2);">
-                <input type="button" value="Black" onclick="window.pbEarTrainer.ui.options.createStandardTest(3);">
-                <input type="button" value="All" onclick="window.pbEarTrainer.ui.options.createStandardTest(4);">
-                <key-component id="idC" x="100" y="200" label="C" ></key-component>
-                <key-component id="idD" x="140" y="200" label="D" ></key-component>
-                <key-component id="idE" x="180" y="200" label="E" ></key-component>
-                <key-component id="idF" x="220" y="200" label="F" ></key-component>
-                <key-component id="idG" x="260" y="200" label="G" ></key-component>
-                <key-component id="idA" x="300" y="200" label="A" ></key-component>
-                <key-component id="idB" x="340" y="200" label="B" ></key-component>
-                <key-component id="idC#" x="120" y="50" label="C#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idD#" x="160" y="50" label="D#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idF#" x="240" y="50" label="F#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idG#" x="280" y="50" label="G#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idA#" x="320" y="50" label="A#" backgroundColor="black" fontColor="white"></key-component>
+                <input type="button" value="None" 
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 0}));">
+                <input type="button" value="I IV V" 
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 1}));">
+                <input type="button" value="White"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 2}));">
+                <input type="button" value="Black"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 3}));">
+                <input type="button" value="All"
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 4}));">
+                <key-component id="idKeyCC_C" x="100" y="200" label="C" ></key-component>
+                <key-component id="idKeyCC_D" x="140" y="200" label="D" ></key-component>
+                <key-component id="idKeyCC_E" x="180" y="200" label="E" ></key-component>
+                <key-component id="idKeyCC_F" x="220" y="200" label="F" ></key-component>
+                <key-component id="idKeyCC_G" x="260" y="200" label="G" ></key-component>
+                <key-component id="idKeyCC_A" x="300" y="200" label="A" ></key-component>
+                <key-component id="idKeyCC_B" x="340" y="200" label="B" ></key-component>
+                <key-component id="idKeyCC_C#" x="120" y="50" label="C#" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_D#" x="160" y="50" label="D#" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_F#" x="240" y="50" label="F#" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_G#" x="280" y="50" label="G#" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_A#" x="320" y="50" label="A#" backgroundColor="black" fontColor="white"></key-component>
             </div>
             `);
     }
 
     getKCCs() {
         // Set the key custom component ids
-        let theNames: string[] = ['idC', 'idC#', 'idD', 'idD#', 'idE', 'idF', 'idF#', 'idG', 'idG#', 'idA', 'idA#', 'idB'];
+        let theNames: string[] = ['idKeyCC_C', 'idKeyCC_C#', 'idKeyCC_D', 'idKeyCC_D#', 'idKeyCC_E', 'idKeyCC_F', 'idKeyCC_F#', 'idKeyCC_G', 'idKeyCC_G#', 'idKeyCC_A', 'idKeyCC_A#', 'idKeyCC_B'];
         this.theKCCs = [];
         theNames.forEach((theName, index) => {this.theKCCs[index] = document.getElementById(theName) as PBKeyCustomComponent;});
     }
@@ -119,7 +133,7 @@ class PBOptionsPage {
     setKCConchange() {
         // Sets the onchange callbacks for the key custom components.
         // This is only called when the value is "committed" by the user,
-        // as opposed to any time the value is changed.  Therefore, the
+        // as opposed to any time the value is changed.  Therefore,
         // the valueElement and the sliderElement need to be handled
         // separately.
         this.theKCCs.forEach((theKCC, index) => {

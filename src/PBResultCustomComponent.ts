@@ -4,13 +4,19 @@
 // of the tests.
 
 
+import {PBResultsPage} from "./PBResultsPage";
+
 class PBResultCustomComponent extends HTMLElement {
     static DIV_WIDTH = 40;
+    static METER_HEIGHT = 100;
 
     shadow: ShadowRoot;
     wrapperElement: HTMLDivElement; // The parent element
-    valueElement: HTMLDivElement;
-    labelElement: HTMLDivElement;
+    meterDiv: HTMLDivElement;
+    meterElement: HTMLMeterElement;
+    meterFractionDiv: HTMLDivElement;
+    meterFraction: HTMLSpanElement;
+    labelElement: HTMLSpanElement;
     styleElement: HTMLStyleElement;
     wrapperX: string;
     wrapperY: string;
@@ -37,12 +43,28 @@ class PBResultCustomComponent extends HTMLElement {
     }
 
     buildSubElements() {
-        // The element with the numeric value.
-        this.valueElement = document.createElement('div');
-        this.valueElement.setAttribute('class', 'valueElement');
+        // Contains the meter
+        this.meterDiv = document.createElement('div');
+        this.meterDiv.setAttribute('class', 'meterDiv');
+
+        // The meter
+        this.meterElement = document.createElement('meter');
+        this.meterElement.setAttribute('class', 'meterElement');
+        this.meterElement.setAttribute('min', '0.0');
+        this.meterElement.setAttribute('max', '1.0');
+        this.meterElement.setAttribute('low', '0.33');
+        this.meterElement.setAttribute('high', '0.66');
+        this.meterElement.setAttribute('optimum', '0.7');
+        this.meterElement.setAttribute('value', '0.0');
+
+        this.meterFractionDiv = document.createElement('div');
+        this.meterFractionDiv.setAttribute('class', 'meterFractionDiv');
+
+        this.meterFraction = document.createElement('span');
+        this.meterFraction.setAttribute('class', 'meterFraction');
 
         // Just a static label that is set in the html.
-        this.labelElement = document.createElement('div');
+        this.labelElement = document.createElement('span');
         this.labelElement.setAttribute('class', 'labelElement');
         this.labelElement.innerText = (this.hasAttribute('label')) ? this.getAttribute('label') : 'None';
     }
@@ -62,8 +84,32 @@ class PBResultCustomComponent extends HTMLElement {
                 color: ${this.fontColor};
             }
             
-            .valueElement {
-                width: ${PBResultCustomComponent.DIV_WIDTH - 10}px;
+            .meterDiv {
+                width: ${PBResultCustomComponent.DIV_WIDTH}px;
+                height: ${PBResultCustomComponent.METER_HEIGHT}px;
+                padding-bottom: 5px;
+            }
+            
+            .meterElement {
+                width: ${PBResultCustomComponent.METER_HEIGHT}px;
+                height: ${PBResultCustomComponent.DIV_WIDTH}px;
+                transform-origin: ${PBResultCustomComponent.METER_HEIGHT / 2}px ${PBResultCustomComponent.METER_HEIGHT / 2}px;
+                transform: rotate(-90deg);
+            }
+            
+            .meterFractionDiv {
+                position: absolute;
+                top: 50%;
+                left: 30%;
+                right: 30%;
+                background-color: #ddd;
+                border-radius: 4px 4px 4px 4px;
+                padding: 2px 0px;
+            }
+            
+            .meterFraction {
+                position: relative;
+                color: black;
             }
             
             .labelElement {
@@ -78,8 +124,21 @@ class PBResultCustomComponent extends HTMLElement {
         // Attach the created elements to the shadow dom
         this.shadow.appendChild(this.styleElement);
         this.shadow.appendChild(this.wrapperElement);
-        this.wrapperElement.appendChild(this.valueElement);
+        this.meterDiv.appendChild(this.meterElement);
+        this.meterFractionDiv.appendChild(this.meterFraction);
+        this.meterDiv.appendChild(this.meterFractionDiv);
+        this.wrapperElement.appendChild(this.meterDiv);
         this.wrapperElement.appendChild(this.labelElement);
+    }
+
+    updateResults(numCorrect: number, numTests: number) {
+        this.meterElement.value = (numTests == 0) ? 0 : numCorrect / numTests;
+        this.meterFraction.innerHTML = `  <math>
+                                            <mfrac>
+                                              <mn>${numCorrect}</mn>
+                                              <mn>${numTests}</mn>
+                                            </mfrac>
+                                          </math>`;
     }
 }
 
