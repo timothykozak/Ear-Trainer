@@ -8,7 +8,6 @@
 
 import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBSequencer, SequenceItem} from "./PBSequencer.js";
-import {PBSounds} from "./PBSounds.js";
 import {PBConst} from "./PBConst.js";
 import {MyRect} from "./PBUI.js";
 
