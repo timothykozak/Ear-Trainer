@@ -1,0 +1,407 @@
+<p>This MIDI CC list gives an overview of all 127  control change messages and which action they are assigned to by default. You can use this list to set up your MIDI controller and manipulate your MIDI data in all different kind of ways to make your music more expressive. For example, you can use them to add vibrato, abrupt or gradual volume changes, or control the amount of reverb, tremolo, and/or chorus, and so on. The most commonly used CCs are displayed in&nbsp;<strong>bold</strong>&nbsp;typeface.</p>
+        <h3>Assign a custom parameter to a MIDI CC</h3>
+        <p>If you want to assign a parameter to an undefined CC you find a separate MIDI CC <a style="" href="#undefined">list of all undefined CCs</a> below.</p>
+        <h2>The MIDI Control Change Messages - Continuous Controllers </h2>
+        <table class="midi">
+        <col width="100">
+        <tbody>
+        <tr>
+        <th width="44px">MIDI CC #</th>
+        <th>MIDI CC Purpose</th>
+        <th>Value</th>
+        <th>MIDI CC Description</th>
+        </tr>
+        <tr>
+        <td>0</td>
+        <td><strong>Bank Select</strong> (MSB)</td>
+        <td>0-127</td>
+        <td>Allows user to switch bank for patch selection. Program change used with Bank Select. MIDI can access 16,384 patches per MIDI channel.</td>
+        </tr>
+        <tr>
+        <td>1</td>
+        <td><strong>Modulation Wheel</strong> (MSB)</td>
+        <td>0-127</td>
+        <td>Generally this CC controls a vibrato effect (pitch, loudness, brighness). What is modulated is based on the patch.</td>
+        </tr>
+        <tr>
+        <td>2</td>
+        <td>Breath Controller (MSB)</td>
+        <td>0-127</td>
+        <td>Oftentimes associated with aftertouch messages. It was originally intended for use with a breath MIDI controller in which blowing harder produced higher MIDI control values. It can be used for modulation as well.</td>
+        </tr>
+        <tr>
+        <td>3</td>
+        <td>Undefined (MSB)</td>
+        <td>0-127</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>4</td>
+        <td><strong>Foot Pedal</strong> (MSB)</td>
+        <td>0-127</td>
+        <td>Often used with aftertouch messages. It can send a continuous stream of values based on how the pedal is used.</td>
+        </tr>
+        <tr>
+        <td>5</td>
+        <td>Portamento Time (MSB)</td>
+        <td>0-127</td>
+        <td>Controls portamento rate to slide between 2 notes played subsequently.</td>
+        </tr>
+        <tr>
+        <td>6</td>
+        <td><strong>Data Entry</strong> (MSB)</td>
+        <td>0-127</td>
+        <td class="style3">Controls Value for NRPN or RPN parameters.</td>
+        </tr>
+        <tr>
+        <td>7</td>
+        <td><strong>Volume</strong> (MSB)</td>
+        <td>0-127</td>
+        <td>Controls the volume of the channel. </td>
+        </tr>
+        <tr>
+        <td>8</td>
+        <td>Balance (MSB)</td>
+        <td>0-127</td>
+        <td>Controls the left and right balance, generally for stereo patches. A value of 64 equals the center.</td>
+        </tr>
+        <tr>
+        <td>9</td>
+        <td>Undefined (MSB)</td>
+        <td>0-127</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>10</td>
+        <td><strong>Pan</strong> (MSB)</td>
+        <td>0-127</td>
+        <td>Controls the left and right balance, generally for mono patches. A value of 64 equals the center.</td>
+        </tr>
+        <tr>
+        <td>11</td>
+        <td><strong>Expression</strong> (MSB)</td>
+        <td>0-127</td>
+        <td>Expression is a percentage of volume (CC7).</td>
+        </tr>
+        <tr>
+        <td>12</td>
+        <td>Effect Controller 1 (MSB)</td>
+        <td>0-127</td>
+        <td>Usually used to control a parameter of an effect within the synth or workstation.</td>
+        </tr>
+        <tr>
+        <td>13</td>
+        <td>Effect Controller 2 (MSB)</td>
+        <td>0-127</td>
+        <td>Usually used to control a parameter of an effect within the synth or workstation.</td>
+        </tr>
+        <tr>
+        <td>14</td>
+        <td>Undefined (MSB)</td>
+        <td>0-127</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>15</td>
+        <td>Undefined (MSB)</td>
+        <td>0-127</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>16 - 19</td>
+        <td>General Purpose (MSB)</td>
+        <td>0-127</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>20 - 31</td>
+        <td>Undefined (MSB)</td>
+        <td>0-127</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>32 - 63</td>
+        <td>LSB Controller for 0-31</td>
+        <td>0-127</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>64</td>
+        <td><strong>Damper Pedal</strong> on/off</td>
+        <td><=63 off, >=64 on</td>
+        <td>On/off switch that controls sustain pedal. Nearly every synth will react to CC 64. (See also Sostenuto CC 66)</td>
+        </tr>
+        <tr>
+        <td>65</td>
+        <td><strong>Portamento</strong> on/off</td>
+        <td><=63 off, >=64 on</td>
+        <td>On/off switch</td>
+        </tr>
+        <tr>
+        <td>66</td>
+        <td>Sostenuto Pedal on/off</td>
+        <td><=63 off, >=64 on</td>
+        <td>On/off switch - Like the Sustain controller (CC 64), However, it only holds notes that were "On" when the pedal was pressed. People use it to "hold" chords" and play melodies over the held chord.</td>
+        </tr>
+        <tr>
+        <td>67</td>
+        <td>Soft Pedal on/off</td>
+        <td><=63 off, >=64 on</td>
+        <td>On/off switch<br> &#8211; Lowers the volume of notes played.</td>
+        </tr>
+        <tr>
+        <td>68</td>
+        <td>Legato FootSwitch</td>
+        <td><=63 off, >=64 on</td>
+        <td>On/off switch<br> &#8211; Turns Legato effect between 2 subsequent notes on or off.</td>
+        </tr>
+        <tr>
+        <td>69</td>
+        <td>Hold 2</td>
+        <td><=63 off, >=64 on</td>
+        <td>Another way to "hold notes" (see MIDI CC 64 and MIDI CC 66). However notes fade out according to their release parameter rather than when the pedal is released.</td>
+        </tr>
+        <tr>
+        <td>70</td>
+        <td>Sound Controller 1</td>
+        <td>0-127</td>
+        <td>Usually controls the way a sound is produced. Default = Sound Variation.</td>
+        </tr>
+        <tr>
+        <td>71</td>
+        <td><strong>Sound Controller 2</strong></td>
+        <td>0-127</td>
+        <td>Allows shaping the Voltage Controlled Filter (VCF). Default = <strong>Resonance</strong> also (Timbre or Harmonics)</td>
+        </tr>
+        <tr>
+        <td>72</td>
+        <td>Sound Controller 3</td>
+        <td>0-127</td>
+        <td>Controls release time of the Voltage controlled Amplifier (VCA). Default = Release Time.</td>
+        </tr>
+        <tr>
+        <td>73</td>
+        <td>Sound Controller 4</td>
+        <td>0-127</td>
+        <td>Controls the "Attack" of a sound. The attack is the amount of time it takes for the sound to reach maximum amplitude.</td>
+        </tr>
+        <tr>
+        <td>74</td>
+        <td><strong>Sound Controller 5</strong></td>
+        <td>0-127</td>
+        <td>Controls VCFs <strong>cutoff frequency</strong> of the filter.</td>
+        </tr>
+        <tr>
+        <td>75</td>
+        <td>Sound Controller 6</td>
+        <td>0-127</td>
+        <td>Generic - Some manufacturers may use to further shave their sounds.</td>
+        </tr>
+        <tr>
+        <td>76</td>
+        <td>Sound Controller 7</td>
+        <td>0-127</td>
+        <td>Generic - Some manufacturers may use to further shave their sounds.</td>
+        </tr>
+        <tr>
+        <td>77</td>
+        <td>Sound Controller 8</td>
+        <td>0-127</td>
+        <td>Generic - Some manufacturers may use to further shave their sounds.</td>
+        </tr>
+        <tr>
+        <td>78</td>
+        <td>Sound Controller 9</td>
+        <td>0-127</td>
+        <td>Generic - Some manufacturers may use to further shave their sounds.</td>
+        </tr>
+        <tr>
+        <td>79</td>
+        <td>Sound Controller 10</td>
+        <td>0-127</td>
+        <td>Generic - Some manufacturers may use to further shave their sounds.</td>
+        </tr>
+        <tr>
+        <td>80</td>
+        <td>General Purpose<br> MIDI CC Controller</td>
+        <td>0-127</td>
+        <td>Decay Generic or on/off switch<br><=63 off, >=64 on</td>
+        </tr>
+        <tr>
+        <td>81</td>
+        <td>General Purpose MIDI CC Controller</td>
+        <td>0-127</td>
+        <td>Hi-Pass Filter Frequency or Generic on/off switch<br><=63 off, >=64 on</td>
+        </tr>
+        <tr>
+        <td>82</td>
+        <td>General Purpose MIDI CC Controller</td>
+        <td>0-127</td>
+        <td>Generic on/off switch<br><=63 off, >=64 on</td>
+        </tr>
+        <tr>
+        <td>83</td>
+        <td>General Purpose MIDI CC Controller</td>
+        <td>0-127</td>
+        <td>Generic on/off switch<br><=63 off, >=64 on</td>
+        </tr>
+        <tr>
+        <td>84</td>
+        <td>Portamento CC Control</td>
+        <td>0-127</td>
+        <td>Controls the <strong>amount of Portamento.</strong></td>
+        </tr>
+        <tr>
+        <td>85 - 87</td>
+        <td>Undefined</td>
+        <td>&#8212;</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>88</td>
+        <td>High Resolution Velocity Prefix</td>
+        <td>0-127</td>
+        <td>Extends the range of possible velocity values</td>
+        </tr>
+        <tr>
+        <td>89 &amp; 90</td>
+        <td>Undefined</td>
+        <td>&#8212;</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr>
+        <td>91</td>
+        <td><strong>Effect 1 Depth</strong></td>
+        <td>0-127</td>
+        <td>Usually controls <strong>reverb</strong> send amount</td>
+        </tr>
+        <tr>
+        <td>92</td>
+        <td>Effect 2 Depth</td>
+        <td>0-127</td>
+        <td>Usually controls tremolo amount</td>
+        </tr>
+        <tr>
+        <td>93</td>
+        <td><strong>Effect 3 Depth</strong></td>
+        <td>0-127</td>
+        <td>Usually controls <strong>chorus</strong> amount</td>
+        </tr>
+        <tr>
+        <td>94</td>
+        <td>Effect 4 Depth</td>
+        <td>0-127</td>
+        <td>Usually controls detune amount</td>
+        </tr>
+        <tr>
+        <td>95</td>
+        <td>Effect 5 Depth</td>
+        <td>0-127</td>
+        <td>Usually controls phaser amount</td>
+        </tr>
+        <tr>
+        <td>96</td>
+        <td>(+1) Data Increment</td>
+        <td>N/A</td>
+        <td>Usually used to increment data for RPN and NRPN messages.</td>
+        </tr>
+        <tr>
+        <td>97</td>
+        <td>(-1) Data Decrement</td>
+        <td>N/A</td>
+        <td>Usually used to decrement data for RPN and NRPN messages.</td>
+        </tr>
+        <tr>
+        <td>98</td>
+        <td>Non-Registered Parameter Number LSB (NRPN)</td>
+        <td>0-127</td>
+        <td>For controllers 6, 38, 96, and 97, it selects the NRPN parameter.</td>
+        </tr>
+        <tr>
+        <td>99</td>
+        <td>Non-Registered Parameter Number MSB (NRPN)</td>
+        <td>0-127</td>
+        <td>For controllers 6, 38, 96, and 97, it selects the NRPN parameter.</td>
+        </tr>
+        <tr>
+        <td>100</td>
+        <td>Registered Parameter Number LSB (RPN)</td>
+        <td>0-127</td>
+        <td>For controllers 6, 38, 96, and 97, it selects the RPN parameter.</td>
+        </tr>
+        <tr>
+        <td>101</td>
+        <td>Registered Parameter Number MSB (RPN)</td>
+        <td>0-127</td>
+        <td>For controllers 6, 38, 96, and 97, it selects the RPN parameter.</td>
+        </tr>
+        <tr>
+        <td>102 - 119</td>
+        <td>Undefined</td>
+        <td>&#8212;</td>
+        <td>&nbsp;</td>
+        </tr>
+        <tr class="midichannel">
+        <td colspan="4">MIDI CC 120 to 127 are Channel Mode Messages.</td>
+        </tr>
+        <tr>
+        <td>120</td>
+        <td>All Sound Off</td>
+        <td>0</td>
+        <td><strong>Mutes all sound.</strong> It does so regardless of release time or sustain. (See MIDI CC 123)</td>
+        </tr>
+        <tr>
+        <td>121</td>
+        <td>Reset All Controllers</td>
+        <td>0</td>
+        <td>It will reset all controllers to their default.</td>
+        </tr>
+        <tr>
+        <td>122</td>
+        <td>Local on/off Switch</td>
+        <td>0 off, 127 on</td>
+        <td>Turns internal connection of a MIDI keyboard or workstation, etc. on or off. If you use a computer, you will most likely want local control off to avoid notes being played twice. Once locally and twice when the note is sent back from the computer to your keyboard.</td>
+        </tr>
+        <tr>
+        <td>123</td>
+        <td>All Notes Off</td>
+        <td>0</td>
+        <td><strong>Mutes all sounding notes.</strong> Release time will still be maintained, and notes held by sustain will not turn off until sustain pedal is depressed.</td>
+        </tr>
+        <tr>
+        <td>124</td>
+        <td>Omni Mode Off</td>
+        <td>0</td>
+        <td>Sets to "Omni Off" mode.</td>
+        </tr>
+        <tr>
+        <td>125</td>
+        <td>Omni Mode On</td>
+        <td>0</td>
+        <td>Sets to "Omni On" mode.</td>
+        </tr>
+        <tr>
+        <td>126</td>
+        <td>Mono Mode</td>
+        <td>→</td>
+        <td>Sets device mode to Monophonic. The value equals the number of channels, or 0 if the number of channels equals the number of voices in the receiver.</td>
+        </tr>
+        <tr>
+        <td>127</td>
+        <td>Poly Mode</td>
+        <td>0</td>
+        <td>Sets device mode to Polyphonic.</td>
+        </tr>
+        </tbody>
+        </table>
+        <h2 id="undefined">Undefined MIDI CC List</h2>
+        <p>In case you just need a MIDI CC List of undefined MIDI CCs to attach an effect/parameter/etc. to a MIDI Controller, here is one with the by default undefined MIDI CCs:</p>
+        <ul><li>CC 3</li><li>CC 9</li><li>CC 14-15</li><li>CC 20-31</li><li>CC 85-87</li><li>CC 89-90</li><li>CC 102-119</li></ul>
+        <p>For a more detailed table with Data Bytes included you can check out the<a href="https://www.midi.org/specifications/item/table-3-control-change-messages-data-bytes-2" target="_blank" rel="noreferrer noopener" aria-label=" (opens in a new tab)"> official MIDI Control Changes list</a>.</p>
+        <p>Note: Not all synthesizers respond to all CC&#8217;s. There should be a list in your synth or keyboard manual.  It&#8217;s&nbsp;sometimes within the&nbsp;back and&nbsp;it&#8217;s&nbsp;usually&nbsp;labeled as&nbsp;the  <em>MIDI implementation chart</em>. If you don&#8217;t have the manual or can&#8217;t find one online, try a few to see if they work. If you find this page helpful, feel free to link to it. </p>
+        </div></title>
+</head>
+<body>
+
+</body>
+</html>
