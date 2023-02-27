@@ -27,7 +27,8 @@ class PBCharacterInput {
                 case 'S':
                     break;
                 case ' ':
-                    this.tester.pickNextNoteToTest();
+                    document.dispatchEvent(new CustomEvent(PBConst.EVENTS.transportButton,
+                        {detail: PBConst.TRANSPORT_BUTTONS.START}));
                     break;
                 default:
                     break;
