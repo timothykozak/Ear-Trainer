@@ -38,8 +38,6 @@ class PBUI {
     static MP_OPTIONS = 0;  // The Options menu page
     static MP_STATS = 1;    // The Stats menu page
     static MP_HELP = 2;     // The Help menu page
-    static TB_START = 0;    // Start transport button
-    static TB_STOP = 1;     // Stop transport button
 
     canvas: HTMLCanvasElement; // The drawing canvas for both notation and keyboard
     options: PBOptionsPage;
@@ -103,9 +101,9 @@ class PBUI {
     }
 
     onTransportButton(event: CustomEvent) {
-        if (event.detail == PBUI.TB_START)
+        if (event.detail == PBConst.TRANSPORT_BUTTONS.START)
             this.startButtonClicked();
-        else if (event.detail == PBUI.TB_STOP)
+        else if (event.detail == PBConst.TRANSPORT_BUTTONS.STOP)
             this.stopButtonClicked();
     }
 
@@ -132,10 +130,10 @@ class PBUI {
             <div id="transportStats" class="resultsDiv"></div>
             <ul>
                 <li id="transportStop" class="toolTip"
-                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.transportButton}', {detail: ${PBUI.TB_STOP}}));">
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.transportButton}', {detail: ${PBConst.TRANSPORT_BUTTONS.STOP}}));">
                     &#xf24f<span class="toolTipText toolTipTextAbove">Stop</span></li>
                 <li id="transportStart" class="toolTip"
-                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.transportButton}', {detail: ${PBUI.TB_START}}));">
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.transportButton}', {detail: ${PBConst.TRANSPORT_BUTTONS.START}}));">
                     &#xf488<span class="toolTipText toolTipTextAbove">Play</span></li>
             </ul>
         </div>        `);
