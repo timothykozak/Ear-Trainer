@@ -95,8 +95,20 @@ class PBConst {
             PITCH_BEND: 0xe,
             NON_MUSICAL_COMMANDS: 0xf,
             ACTIVE_SENSING: 254
+        },
+        CONTINUOUS_CONTROLLER: {
+            DAMPER_PEDAL: 65,
+            PORTAMENTO: 66,
+            SOSTENUTO_PEDAL: 67,
+            SOFT_PEDAL: 68,
+            LEGATO_FOOT_SWITCH: 69
         }
     };
+
+    static TRANSPORT_BUTTONS = {
+        START: 0,
+        STOP: 1
+    }
 
     static STORAGE = {
         optionsPage: "optionsPage",
