@@ -8,6 +8,8 @@
 // output.  This class listens to EVENTS.sequencerNotePlayed
 // for the playing of notes, and dispatches
 // EVENTS.keyboardHover when a key is pressed.
+// The pedal is used to ask for the next note, but it sends
+// multiple messages, so only the first one is accepted.
 //
 // The first time this app is run, Chrome will ask the user
 // if MIDI can be used.  After that it should remember the
@@ -28,10 +30,17 @@ class PBMIDI {
     inputs: WebMidi.MIDIInput[] = [];
     outputs: WebMidi.MIDIOutput[] = [];
     outputIndex: number = -1;
+    canAcceptPedal: boolean = false;
 
     constructor(public statusWindow: PBStatusWindow, public sequencer: PBSequencer) {
         this.checkForMIDI();
+        this.initListeners();
+    }
+
+    initListeners() {
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencer(event)}, false);
+        document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event)}, false);
+        document.addEventListener(PBConst.EVENTS.sequencerCadenceStarted, (event: CustomEvent) => {this.onCadenceStarted(event)}, false);
     }
 
     setAvailable(value: boolean) {
@@ -68,6 +77,14 @@ class PBMIDI {
         }
     }
 
+    onTestNotePlayed(event: CustomEvent) {
+        this.canAcceptPedal = true;
+    }
+
+    onCadenceStarted(event: CustomEvent) {
+        this.canAcceptPedal = false;
+    }
+
     onMIDIMessage(message: WebMidi.MIDIMessageEvent) {
         let command = (message.data[0] & 0xf0) >>> 4;   // Command is the highest nibble
         let controller = message.data[0] & 0x0f;       // Controller is the lowest nibble
@@ -83,6 +100,17 @@ class PBMIDI {
                 case PBConst.MIDI.MESSAGES.NOTE_OFF:
                     this.noteOffReceived(note);
                     break;
+                case PBConst.MIDI.MESSAGES.CONTINUOUS_CONTROLLER:
+                    if (this.canAcceptPedal) {
+                        let pedal = note;
+                        if ((pedal >= PBConst.MIDI.CONTINUOUS_CONTROLLER.DAMPER_PEDAL) &&
+                            (pedal <= PBConst.MIDI.CONTINUOUS_CONTROLLER.LEGATO_FOOT_SWITCH)) {
+                            document.dispatchEvent(new CustomEvent(PBConst.EVENTS.transportButton,
+                                                        {detail: PBConst.TRANSPORT_BUTTONS.START}));
+                            this.canAcceptPedal = false;
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -91,7 +119,8 @@ class PBMIDI {
 
     noteOnReceived(note: number, velocity: number) : void {
         this.sequencer.playNote(note);
-        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.keyboardHover, {detail: note})); // No longer hovering
+        // This will
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.keyboardHover, {detail: note}));
     }
 
     noteOffReceived(note: number) : void {
