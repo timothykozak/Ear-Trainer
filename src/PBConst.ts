@@ -120,7 +120,9 @@ class PBConst {
     static MESSAGE_TYPE = {
         mouse: 0,
         keyboard: 1,
-        midi: 2
+        midi: 2,
+        sounds: 3,
+        ui: 4
     };
 }
 
