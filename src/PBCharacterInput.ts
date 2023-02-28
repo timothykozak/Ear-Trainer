@@ -5,14 +5,13 @@
 //
 
 import {PBSequencer} from "./PBSequencer.js";
-import {PBTester} from "./PBTester.js";
 import {PBConst} from "./PBConst.js";
 import {PBStatusWindow} from "./PBStatusWindow.js";
 
 class PBCharacterInput {
     theNote: number = 0;
 
-    constructor(public sequencer: PBSequencer, public tester: PBTester) {
+    constructor(public sequencer: PBSequencer) {
         document.addEventListener(PBConst.EVENTS.keyPress, (event: KeyboardEvent) => {this.onCharacterInput(event);}, false)
     }
 
