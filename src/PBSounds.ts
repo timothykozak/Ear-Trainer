@@ -6,7 +6,6 @@
 // This class listens to the sequencer and plays the sequenced notes.
 //
 
-import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBConst} from "./PBConst.js";
 
 interface Sound {
@@ -36,12 +35,18 @@ class PBSounds {
     soundsAvailable =0; // Actual sounds available for this instrument.
     soundsRequested = 0;    // Total sounds requested for this instrument.
 
-    constructor(public msgWindow: PBStatusWindow, public context: AudioContext) {
+    constructor(public context: AudioContext) {
         // Ask for the Instrument file and download the first one.
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencer(event)}, false);
         this.buildSoundsArray();
         this.loadInstrumentsJSON();
     }
+
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.sounds, error: isAnError, theText: theMessage}}));
+    }
+
 
     onSequencer(event: CustomEvent) {
         // The sequencer has asked that a note be played.
@@ -78,7 +83,7 @@ class PBSounds {
         if (this.soundsAvailable == this.soundsRequested) {
             this.allSoundsLoaded = true;
             document.dispatchEvent(new Event(PBConst.EVENTS.soundsInstrumentLoaded));
-            this.msgWindow.writeMsg("Instrument loaded.");
+            this.dispatchStatusMessage(false, "Instrument loaded.");
         }
     }
 
@@ -104,7 +109,7 @@ class PBSounds {
             this.soundsAvailable++;
             this.checkInstrumentDownloadComplete();
         }).catch((error: Error) => {
-            this.msgWindow.writeErr('Could not retrieve ' + url + ': ' + error.message);
+            this.dispatchStatusMessage(true, 'Could not retrieve ' + url + ': ' + error.message);
         })
     }
 
@@ -118,10 +123,10 @@ class PBSounds {
             return (response.json());   // Got something.
         }).then((theJSON) => {  // Convert from JSON
             this.instruments = theJSON;
-            this.msgWindow.writeMsg("instruments.txt was loaded.");
+            this.dispatchStatusMessage(false, "instruments.txt was loaded.");
             this.loadInstrument(this.instruments[0]);   // Load the first instrument
         }).catch((error) => {
-            this.msgWindow.writeErr('Could not retrieve ' + PBSounds.INSTRUMENT_FILE_NAME + ': ' + error.message);
+            this.dispatchStatusMessage(true, 'Could not retrieve ' + PBSounds.INSTRUMENT_FILE_NAME + ': ' + error.message);
         })
     }
 
