@@ -21,7 +21,6 @@
 //    https://www.midi.org/midi/specifications/item/table-1-summary-of-midi-message
 
 import {PBConst} from "./PBConst.js";
-import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBSequencer} from "./PBSequencer";
 
 class PBMIDI {
@@ -32,7 +31,7 @@ class PBMIDI {
     outputIndex: number = -1;
     canAcceptPedal: boolean = false;
 
-    constructor(public statusWindow: PBStatusWindow, public sequencer: PBSequencer) {
+    constructor(public sequencer: PBSequencer) {
         this.checkForMIDI();
         this.initListeners();
     }
@@ -58,7 +57,8 @@ class PBMIDI {
             navigator.requestMIDIAccess({sysex: true}).then((midiAccess) => {
                 this.setAvailable(true);
                 this.midiAccess = midiAccess;
-                this.statusWindow.writeMsg("MIDI is available.");
+                document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+                                            {detail: {theType: PBConst.MESSAGE_TYPE.midi, error: false, theText: "MIDI is available."}}));
 
                 for (let input of midiAccess.inputs.values()) {
                     this.inputs.push(input);
@@ -71,7 +71,8 @@ class PBMIDI {
                     this.outputs.push(output);
                 }
             }, (error) => {
-                this.statusWindow.writeErr("MIDI is NOT available.");
+                document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+                  {detail: {theType: PBConst.MESSAGE_TYPE.midi, error: true, theText: "MIDI is NOT available."}}));
                 this.setAvailable(false);
             });
         }
