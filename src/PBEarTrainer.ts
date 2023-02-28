@@ -31,14 +31,14 @@ class PBEarTrainer {
         }
     }
 
-    checkForWebAudio() {
+    checkForWebAudio() : boolean {
         try {   // Check if WebAudio API is available.
             this.audioContext = new AudioContext();
             this.statusWindow.writeMsg("Web Audio is available.");
-            return (true);
+            return(true);
         } catch (e) {
             this.statusWindow.writeErr("Web Audio API is not supported in this browser");
-            return (false);
+            return(false);
         }
     }
 
@@ -65,7 +65,7 @@ class PBEarTrainer {
         this.sequencer = new PBSequencer();
         this.tester = new PBTester(this.audioContext, this.sequencer);
         this.characterInput = new PBCharacterInput(this.sequencer, this.tester);
-        this.midi = new PBMIDI(this.statusWindow, this.sequencer);
+        this.midi = new PBMIDI(this.sequencer);
         this.ui = new PBUI(this.statusWindow, this.sequencer, this.tester);
         // Register the ServiceWorker
         navigator.serviceWorker.register('./built/PBServiceWorker.js').then((registration) => {
