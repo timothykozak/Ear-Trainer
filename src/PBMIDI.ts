@@ -46,6 +46,11 @@ class PBMIDI {
         this.available = value;
     }
 
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.midi, error: isAnError, theText: theMessage}}));
+    }
+
     checkForMIDI() {
         // The callbacks of a promise will never be called before the completion
         // of the current run of the JavaScript event loop.  Therefore, the
@@ -57,8 +62,7 @@ class PBMIDI {
             navigator.requestMIDIAccess({sysex: true}).then((midiAccess) => {
                 this.setAvailable(true);
                 this.midiAccess = midiAccess;
-                document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
-                                            {detail: {theType: PBConst.MESSAGE_TYPE.midi, error: false, theText: "MIDI is available."}}));
+                this.dispatchStatusMessage(false, "MIDI is available.");
 
                 for (let input of midiAccess.inputs.values()) {
                     this.inputs.push(input);
@@ -71,8 +75,7 @@ class PBMIDI {
                     this.outputs.push(output);
                 }
             }, (error) => {
-                document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
-                  {detail: {theType: PBConst.MESSAGE_TYPE.midi, error: true, theText: "MIDI is NOT available."}}));
+                this.dispatchStatusMessage(true, "MIDI is NOT available.");
                 this.setAvailable(false);
             });
         }
@@ -120,7 +123,7 @@ class PBMIDI {
 
     noteOnReceived(note: number, velocity: number) : void {
         this.sequencer.playNote(note);
-        // This will
+        // This will display the note pressed on the keyboard.
         document.dispatchEvent(new CustomEvent(PBConst.EVENTS.keyboardHover, {detail: note}));
     }
 
