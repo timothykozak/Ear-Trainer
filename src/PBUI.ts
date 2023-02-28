@@ -15,7 +15,6 @@ import {PBConst, TID} from "./PBConst.js";
 import {PBSequencer} from "./PBSequencer.js";
 import {PBNotation} from "./PBNotation.js";
 import {PBPianoKeyboard} from "./PBPianoKeyboard.js";
-import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBOptionsPage} from "./PBOptionsPage.js";
 import {PBResultsPage} from "./PBResultsPage.js";
 import {PBTester, TestResults} from "./PBTester";
@@ -55,7 +54,7 @@ class PBUI {
     transportElements: HTMLElement[];
     resultsDiv: HTMLDivElement;
 
-    constructor(public statusWindow: PBStatusWindow, public sequencer: PBSequencer, public tester: PBTester) {
+    constructor(public sequencer: PBSequencer, public tester: PBTester) {
         PBUI.buildBodyHTML();
         this.canvas = document.getElementById("theCanvas") as HTMLCanvasElement;
         this.context = this.canvas.getContext("2d");
@@ -261,7 +260,7 @@ class PBUI {
 
         if (!this.notation) { // In the constructor.  Need to instantiate the classes.
             this.notation = new PBNotation(this.context, this.notationRect);
-            this.pianoKeyboard = new PBPianoKeyboard(this.canvas, this.context, this.pianoRect, this.statusWindow, this.sequencer);
+            this.pianoKeyboard = new PBPianoKeyboard(this.canvas, this.context, this.pianoRect, this.sequencer);
         } else { // Regular resize
             this.notation.resize(this.notationRect);
             this.pianoKeyboard.resize(this.pianoRect);
