@@ -14,6 +14,7 @@ import {PBCharacterInput} from "./PBCharacterInput.js";
 import {PBTester} from "./PBTester.js";
 import {PBUI} from "./PBUI.js";
 import {PBMIDI} from "./PBMIDI.js";
+import {PBConst} from "./PBConst.js";
 
 class PBEarTrainer {
     audioContext: AudioContext;
@@ -31,13 +32,19 @@ class PBEarTrainer {
         }
     }
 
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.ui, error: isAnError, theText: theMessage}}));
+    }
+
+
     checkForWebAudio() : boolean {
         try {   // Check if WebAudio API is available.
             this.audioContext = new AudioContext();
-            this.statusWindow.writeMsg("Web Audio is available.");
+            this.dispatchStatusMessage(false, "Web Audio is available.");
             return(true);
         } catch (e) {
-            this.statusWindow.writeErr("Web Audio API is not supported in this browser");
+            this.dispatchStatusMessage(true, "Web Audio API is not supported in this browser");
             return(false);
         }
     }
@@ -48,10 +55,10 @@ class PBEarTrainer {
             custom: { families: ['Aruvarb', 'ionicons'] },
             timeout:5000,
             fontactive: (familyName: string) => {
-                this.statusWindow.writeMsg(familyName + " font available.");
+                this.dispatchStatusMessage(false, familyName + " font available.");
             },
             fontinactive: (familyName: string) => {
-                this.statusWindow.writeMsg(familyName + " font is not available.");
+                this.dispatchStatusMessage(true, familyName + " font is not available.");
             },
             active: () => {
                 this.initClass();   // The fonts are active, start everything
@@ -61,15 +68,15 @@ class PBEarTrainer {
 
     initClass() {
         // Ready to roll.  Start everything in the proper order.
-        this.soundModule = new PBSounds(this.statusWindow, this.audioContext);
+        this.soundModule = new PBSounds(this.audioContext);
         this.sequencer = new PBSequencer();
         this.tester = new PBTester(this.audioContext, this.sequencer);
         this.characterInput = new PBCharacterInput(this.sequencer, this.tester);
         this.midi = new PBMIDI(this.sequencer);
-        this.ui = new PBUI(this.statusWindow, this.sequencer, this.tester);
+        this.ui = new PBUI(this.sequencer, this.tester);
         // Register the ServiceWorker
         navigator.serviceWorker.register('./built/PBServiceWorker.js').then((registration) => {
-            this.statusWindow.writeMsg('The service worker has been registered ' + registration);
+            this.dispatchStatusMessage(false, 'The service worker has been registered ' + registration);
         });
 
     }
