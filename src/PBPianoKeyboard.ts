@@ -6,7 +6,6 @@
 // Watches the sequencer to reflect the notes being played.
 // The keyboard is used to answer tested note.
 
-import {PBStatusWindow} from "./PBStatusWindow.js";
 import {PBSequencer, SequenceItem} from "./PBSequencer.js";
 import {PBConst} from "./PBConst.js";
 import {MyRect} from "./PBUI.js";
@@ -39,7 +38,7 @@ class PBPianoKeyboard {
     scale: number = 3;
     hoverKey: number = -1;  // Key over which the mouse is hovering.  -1 means no key.
 
-    constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public contextRect: MyRect, public statusWnd: PBStatusWindow, public sequencer: PBSequencer) {
+    constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public contextRect: MyRect, public sequencer: PBSequencer) {
         if (canvas) {
             this.initListeners();
             this.resize(this.contextRect);
@@ -53,6 +52,12 @@ class PBPianoKeyboard {
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencerNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.drawKeyboard();}, false);
     }
+
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.midi, error: isAnError, theText: theMessage}}));
+    }
+
 
     onSequencerNotePlayed(event: CustomEvent) {
         // The sequencer has played a note.  Show the key as playing.
@@ -77,7 +82,7 @@ class PBPianoKeyboard {
         for (let index = 0; index < this.keyRegions.length; index++) {
             // Cycle through all the key regions to see if we have a match.
             if (this.context.isPointInPath(this.keyRegions[index].path, x, y)) {
-                this.statusWnd.writeMsg("Mouseover: key " + index);
+                this.dispatchStatusMessage(false, "Mouseover: key " + index);
                 theResult = index;
             }
         }
@@ -86,7 +91,7 @@ class PBPianoKeyboard {
 
     onMouseLeave(event: MouseEvent) {
         // Mouse left the canvas, can not be hovering
-        this.statusWnd.writeMsg(event.type + " event: x " + event.offsetX + " y " + event.offsetY);
+        this.dispatchStatusMessage(false, event.type + " event: x " + event.offsetX + " y " + event.offsetY);
         if (this.hoverKey != -1) {
             this.fillRegion(this.hoverKey, false);
         }
@@ -97,7 +102,7 @@ class PBPianoKeyboard {
     onMouseMove(event: MouseEvent) {
         // The mouse has moved.  Check to see if the hover needs to be updated.
         let hoverKey = this.checkForHover(event);
-        this.statusWnd.writeMsg(event.type + " event: x " + event.offsetX + " y " + event.offsetY + "  hoverKey: " + hoverKey);
+        this.dispatchStatusMessage(false, event.type + " event: x " + event.offsetX + " y " + event.offsetY + "  hoverKey: " + hoverKey);
 
         if (hoverKey != -1) { // Hovering
             PBPianoKeyboard.dispatchHoverEvent(hoverKey);
@@ -119,9 +124,9 @@ class PBPianoKeyboard {
     onMouseDown(event: MouseEvent) {
         // Mouse clicked.  Check to see if a note needs to be played.
         let hoverKey = this.checkForHover(event);
-        this.statusWnd.writeMsg(event.type + " event: x " + event.offsetX + " y " + event.offsetY + "  hoverKey: " + hoverKey);
+        this.dispatchStatusMessage(false, event.type + " event: x " + event.offsetX + " y " + event.offsetY + "  hoverKey: " + hoverKey);
         if (hoverKey != -1) {
-            this.statusWnd.writeMsg("Piano: Clicked region " + hoverKey);
+            this.dispatchStatusMessage(false, "Piano: Clicked region " + hoverKey);
             this.sequencer.playNote(hoverKey + PBConst.MIDI.MIDDLE_C - 2)
         }
     }
