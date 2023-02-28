@@ -27,7 +27,7 @@ class PBStatusWindow {
         this.setElementIDs();
         this.appendChildren();
         this.setStyles();
-        this.addEventHandlers();
+        this.addListeners();
         PBStatusWindow.theStatusWindows.push(this);
         PBStatusWindow.zSort(this);
         PBStatusWindow.close(this, PBStatusWindow.allClosed);
@@ -210,12 +210,20 @@ class PBStatusWindow {
         this.clientDiv.innerHTML = "<span style=\"color:red\">" + theErr + "</span><br/>" + this.clientDiv.innerHTML;
     };
 
-    addEventHandlers() {
+    addListeners() {
         this.titleDiv.addEventListener(PBConst.EVENTS.mouseDown, PBStatusWindow.beginDrag, false);     // For dragging
         this.closeDiv.addEventListener(PBConst.EVENTS.mouseClick, PBStatusWindow.closeOnClick, false);      // For closing
         this.clientDiv.addEventListener(PBConst.EVENTS.mouseClick, PBStatusWindow.clientOnClick, false);    // For bringing to front
         this.windowDiv.addEventListener(PBConst.EVENTS.mouseClick, PBStatusWindow.windowOnClick, false);    // For bringing to front
+        document.addEventListener(PBConst.EVENTS.statusMessage, (event: CustomEvent) => {this.onStatusMessage(event);}, false);
     };
+
+    onStatusMessage(event: CustomEvent) {
+      if (event.detail.error)
+        this.writeErr(event.detail.theText);
+      else
+        this.writeMsg(event.detail.theText);
+    }
 
     static closeOnClick(event: MouseEvent) {
         let theWindowDiv: HTMLDivElement = (event.target as HTMLDivElement).parentNode.parentNode as HTMLDivElement;  // The windowDiv is the grandparent of the closeDiv
@@ -259,6 +267,5 @@ class PBStatusWindow {
         }
     };
 }
-
 
 export {PBStatusWindow};
