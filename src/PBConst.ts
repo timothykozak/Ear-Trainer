@@ -25,6 +25,8 @@ class PBConst {
 
         transportButton: "PBTransportButton",                   // event.detail = PBUI.TB_?
 
+        statusMessage: "PBStatusMessage",                       // event.detail = {theType: msgType, error: boolean, theText: string}
+
         mouseLeave: "mouseleave",
         mouseMove: "mousemove",
         mouseClick: "click",
@@ -108,11 +110,17 @@ class PBConst {
     static TRANSPORT_BUTTONS = {
         START: 0,
         STOP: 1
-    }
+    };
 
     static STORAGE = {
         optionsPage: "optionsPage",
         statsPage: "statsPage"
+    };
+
+    static MESSAGE_TYPE = {
+        mouse: 0,
+        keyboard: 1,
+        midi: 2
     };
 }
 
