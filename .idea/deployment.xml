@@ -2,42 +2,14 @@
 <project version="4">
   <component name="PublishConfigData">
     <serverData>
-      <paths name="Local Server 2">
+      <paths name="St. Bernard on  Bluehost">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="SHPCOL on Blue Host">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="StBernardBeverly on Blue Host">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="StJamesMcConnelsville on Blue Host">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="XAMPP Apache">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="fathertimkozak on A2">
+      <paths name="St. James on Bluehost">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
