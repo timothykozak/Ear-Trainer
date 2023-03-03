@@ -6,7 +6,7 @@
 // Watches the sequencer to reflect the notes being played.
 // The keyboard is used to answer tested note.
 
-import {PBSequencer, SequenceItem} from "./PBSequencer.js";
+import {SequenceItem} from "./PBSequencer.js";
 import {PBConst} from "./PBConst.js";
 import {MyRect} from "./PBUI.js";
 
@@ -38,7 +38,7 @@ class PBPianoKeyboard {
     scale: number = 3;
     hoverKey: number = -1;  // Key over which the mouse is hovering.  -1 means no key.
 
-    constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public contextRect: MyRect, public sequencer: PBSequencer) {
+    constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public contextRect: MyRect) {
         if (canvas) {
             this.initListeners();
             this.resize(this.contextRect);
@@ -127,7 +127,8 @@ class PBPianoKeyboard {
         this.dispatchStatusMessage(false, event.type + " event: x " + event.offsetX + " y " + event.offsetY + "  hoverKey: " + hoverKey);
         if (hoverKey != -1) {
             this.dispatchStatusMessage(false, "Piano: Clicked region " + hoverKey);
-            this.sequencer.playNote(hoverKey + PBConst.MIDI.MIDDLE_C - 2)
+            let theNote = hoverKey + PBConst.MIDI.MIDDLE_C - 2;
+            document.dispatchEvent(new CustomEvent(PBConst.EVENTS.sequencerExecuteCommand, {detail: {command: PBConst.SEQUENCER_COMMANDS.playNote, note: theNote}}));
         }
     }
 
