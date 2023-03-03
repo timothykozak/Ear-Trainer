@@ -71,7 +71,7 @@ class PBEarTrainer {
         this.sequencer = new PBSequencer();
         this.tester = new PBTester(this.audioContext);
         this.characterInput = new PBCharacterInput();
-        this.midi = new PBMIDI(this.sequencer);
+        this.midi = new PBMIDI();
         this.ui = new PBUI(this.sequencer, this.tester);
         // Register the ServiceWorker
         navigator.serviceWorker.register('./built/PBServiceWorker.js').then((registration) => {
