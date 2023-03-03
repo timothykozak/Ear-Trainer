@@ -5,6 +5,9 @@
 
 class PBConst {
     static EVENTS = {
+        sequencerRunning: "PBSequencerRunning",                 // event.detail = boolean
+        sequencerExecuteCommand: "PBSequencerExecuteCommand",   // event.detail = {command: SEQUENCER_COMMANDS,
+                                                                //                 note: theNote }
         sequencerNotePlayed: "PBSequencerNotePlayed",           // event.detail {SequenceItem}
         sequencerCadenceStarted: "PBSequencerCadenceStarted",   // event.detail = noteBeingTested
         sequencerTestNotePlayed: "PBSequencerTestNotePlayed",   // event.detail = undefined
@@ -122,7 +125,14 @@ class PBConst {
         keyboard: 1,
         midi: 2,
         sounds: 3,
-        ui: 4
+        ui: 4,
+        sequencer: 5
+    };
+
+    static  SEQUENCER_COMMANDS = {
+        reset: 0,
+        playNote: 1,
+        playCadenceAndNote: 2
     };
 }
 
