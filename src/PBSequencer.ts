@@ -31,10 +31,40 @@ class PBSequencer {
     constructor() {
         this.resetSequence();
         setInterval(() => {this.onTimer()}, 100);   // One tick equals 100ms
+        document.addEventListener(PBConst.EVENTS.sequencerExecuteCommand, (event: CustomEvent) => {this.onCommand(event);});
+    }
+
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.sequencer, error: isAnError, theText: theMessage}}));
+    }
+
+    onCommand(event: CustomEvent) {
+        let theCommand = event.detail.command;
+        let theNote = event.detail.note;
+        switch (theCommand) {
+            case PBConst.SEQUENCER_COMMANDS.reset:
+                this.resetSequence();
+                break;
+            case PBConst.SEQUENCER_COMMANDS.playNote:
+                this.playNote(theNote);
+                break;
+            case PBConst.SEQUENCER_COMMANDS.playCadenceAndNote:
+                this.cadencePlusNote(theNote);
+                break;
+            default:
+                this.dispatchStatusMessage(true, 'Received unknown execucteCommand:' + theCommand);
+                break;
+        }
+    }
+
+    setSequencerRunning(isRunning: boolean) {
+        this.sequenceRunning = isRunning;
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.sequencerRunning, {detail: isRunning}));
     }
 
     resetSequence() {
-        this.sequenceRunning = false;
+        this.setSequencerRunning(false);
         this.ticks = 0;
         this.sequence = []; // Clear out old sequence
     }
@@ -42,7 +72,7 @@ class PBSequencer {
     onTimer() {
         // Timer event received.  See if any notes to be played.
         if (this.sequence.length > 0) {
-            this.sequenceRunning = true;
+            this.setSequencerRunning(true);
             this.sequence.forEach((item, index) => {    // The items are not in any order, need to check all of them.
                 if (item.time == this.ticks) {  // Dispatch events to play notes and to update the display.
                     document.dispatchEvent(new CustomEvent(PBConst.EVENTS.sequencerNotePlayed, {detail: item}));
