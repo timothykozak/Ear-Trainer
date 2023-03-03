@@ -37,7 +37,6 @@ class PBEarTrainer {
           {detail: {theType: PBConst.MESSAGE_TYPE.ui, error: isAnError, theText: theMessage}}));
     }
 
-
     checkForWebAudio() : boolean {
         try {   // Check if WebAudio API is available.
             this.audioContext = new AudioContext();
@@ -70,8 +69,8 @@ class PBEarTrainer {
         // Ready to roll.  Start everything in the proper order.
         this.soundModule = new PBSounds(this.audioContext);
         this.sequencer = new PBSequencer();
-        this.tester = new PBTester(this.audioContext, this.sequencer);
-        this.characterInput = new PBCharacterInput(this.sequencer);
+        this.tester = new PBTester(this.audioContext);
+        this.characterInput = new PBCharacterInput();
         this.midi = new PBMIDI(this.sequencer);
         this.ui = new PBUI(this.sequencer, this.tester);
         // Register the ServiceWorker
