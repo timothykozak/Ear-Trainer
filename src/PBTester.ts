@@ -4,7 +4,6 @@
 // This class actually runs the tests.
 //
 
-import {PBSequencer} from "./PBSequencer.js";
 import {PBConst} from "./PBConst.js";
 
 interface TestItem {
@@ -32,17 +31,23 @@ class PBTester {
 
     private _degreesToTest: Array<number>;  // The degrees to be tested
     testRunning: boolean = false;
+    sequencerRunning: boolean = false;
     degreeBeingTested: number;
     waitingForAnswer: boolean;
     results: TestResults;
 
-    constructor(public audioContext: AudioContext, public sequencer: PBSequencer) {
+    constructor(public audioContext: AudioContext) {
         this.initListeners();
     }
 
     initListeners() {
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
+        document.addEventListener(PBConst.EVENTS.sequencerRunning, (event: CustomEvent) => {this.onSequencerRunning(event);})
+    }
+
+    onSequencerRunning(event: CustomEvent) {
+        this.sequencerRunning = event.detail;
     }
 
     onTestNotePlayed(event: CustomEvent) {
@@ -91,19 +96,23 @@ class PBTester {
         return(this._degreesToTest);
     }
 
+    dispatchSequencerCommand(theCommand: number, theNote: number) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.sequencerExecuteCommand, {detail: {command: theCommand, note: theNote}}));
+    }
+
     pickNextNoteToTest(): number {
         // Used to play the next note in the test.
         // Picks a note at random from theDegrees and starts the sequence.
         // Returns the degree being tested, or -1 for failure.
         let theResult = -1;
-        if (!this.sequencer.sequenceRunning && this.testRunning) {  // Still running the test
+        if (!this.sequencerRunning && this.testRunning) {  // Still running the test
             let length = this._degreesToTest.length;
             if (length > 0) {
                 let index = Math.floor(Math.random() * length); // Select a random note to test
                 theResult = this._degreesToTest[index];
                 this.degreeBeingTested = theResult;
                 this._degreesToTest.splice(index, 1);   // Remove the note being tested
-                this.sequencer.cadencePlusNote(theResult + PBConst.MIDI.MIDDLE_C);
+                this.dispatchSequencerCommand(PBConst.SEQUENCER_COMMANDS.playCadenceAndNote, theResult + PBConst.MIDI.MIDDLE_C);
                 this.waitingForAnswer = false;
             } else {
                 this.testRunning = false;
@@ -131,7 +140,7 @@ class PBTester {
         // Otherwise, notes will be sent to the audioContext before it is ready
         // and the beginning of the cadence will be garbled.
         this.audioContext.resume().then( () => {
-            if (!this.sequencer.sequenceRunning && !this.testRunning && (this._degreesToTest.length > 0)) {
+            if (!this.sequencerRunning && !this.testRunning && (this._degreesToTest.length > 0)) {
                 this.testRunning = true; // Test has actually started
                 this.initTestResults();
                 document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerStarted, {detail: {}}));
@@ -144,7 +153,7 @@ class PBTester {
         if (this.testRunning) {
             this.testRunning = false;
             this.waitingForAnswer = false;
-            this.sequencer.resetSequence();
+            this.dispatchSequencerCommand(PBConst.SEQUENCER_COMMANDS.reset, 0);
             document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerFinished, {detail: {theResults: this.results}}));
         }
     }
