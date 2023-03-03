@@ -12,7 +12,6 @@
 // The menu pages overlay the canvas area.
 
 import {PBConst, TID} from "./PBConst.js";
-import {PBSequencer} from "./PBSequencer.js";
 import {PBNotation} from "./PBNotation.js";
 import {PBPianoKeyboard} from "./PBPianoKeyboard.js";
 import {PBOptionsPage} from "./PBOptionsPage.js";
@@ -54,7 +53,7 @@ class PBUI {
     transportElements: HTMLElement[];
     resultsDiv: HTMLDivElement;
 
-    constructor(public sequencer: PBSequencer, public tester: PBTester) {
+    constructor(public tester: PBTester) {
         PBUI.buildBodyHTML();
         this.canvas = document.getElementById("theCanvas") as HTMLCanvasElement;
         this.context = this.canvas.getContext("2d");
@@ -260,7 +259,7 @@ class PBUI {
 
         if (!this.notation) { // In the constructor.  Need to instantiate the classes.
             this.notation = new PBNotation(this.context, this.notationRect);
-            this.pianoKeyboard = new PBPianoKeyboard(this.canvas, this.context, this.pianoRect, this.sequencer);
+            this.pianoKeyboard = new PBPianoKeyboard(this.canvas, this.context, this.pianoRect);
         } else { // Regular resize
             this.notation.resize(this.notationRect);
             this.pianoKeyboard.resize(this.pianoRect);
