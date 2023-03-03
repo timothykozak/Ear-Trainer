@@ -21,7 +21,6 @@
 //    https://www.midi.org/midi/specifications/item/table-1-summary-of-midi-message
 
 import {PBConst} from "./PBConst.js";
-import {PBSequencer} from "./PBSequencer";
 
 class PBMIDI {
     available: boolean = false;
@@ -31,7 +30,7 @@ class PBMIDI {
     outputIndex: number = -1;
     canAcceptPedal: boolean = false;
 
-    constructor(public sequencer: PBSequencer) {
+    constructor() {
         this.checkForMIDI();
         this.initListeners();
     }
@@ -121,10 +120,10 @@ class PBMIDI {
         }
     }
 
-    noteOnReceived(note: number, velocity: number) : void {
-        this.sequencer.playNote(note);
+    noteOnReceived(theNote: number, velocity: number) : void {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.sequencerExecuteCommand, {detail: {command: PBConst.SEQUENCER_COMMANDS.playNote, note: theNote}}));
         // This will display the note pressed on the keyboard.
-        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.keyboardHover, {detail: note}));
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.keyboardHover, {detail: theNote}));
     }
 
     noteOffReceived(note: number) : void {
