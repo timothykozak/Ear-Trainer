@@ -17,6 +17,7 @@ import {PBPianoKeyboard} from "./PBPianoKeyboard.js";
 import {PBOptionsPage} from "./PBOptionsPage.js";
 import {PBResultsPage} from "./PBResultsPage.js";
 import {PBTester, TestResults} from "./PBTester";
+import {Custom} from "webfontloader";
 
 interface MyRect {
     x: number, // Of the upper left corner
@@ -52,8 +53,10 @@ class PBUI {
     pianoRect: MyRect;
     transportElements: HTMLElement[];
     resultsDiv: HTMLDivElement;
+    testRunning: boolean = false;
+    waitingForAnswer: boolean = false;
 
-    constructor(public tester: PBTester) {
+    constructor() {
         PBUI.buildBodyHTML();
         this.canvas = document.getElementById("theCanvas") as HTMLCanvasElement;
         this.context = this.canvas.getContext("2d");
@@ -71,6 +74,7 @@ class PBUI {
         document.addEventListener(PBConst.EVENTS.sequencerCadenceStarted, (event: CustomEvent) => {this.onCadenceStarted(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
+        document.addEventListener(PBConst.EVENTS.testerStarted, (event: CustomEvent) => {this.onTestStarted(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.onTestFinished(event);}, false);
         document.addEventListener(PBConst.EVENTS.handleMenu, (event: CustomEvent) => {this.onHandleMenu(event);}, false);
         document.addEventListener(PBConst.EVENTS.transportButton, (event: CustomEvent) => {this.onTransportButton(event);}, false);
@@ -81,16 +85,23 @@ class PBUI {
     }
 
     onTestNotePlayed(event: CustomEvent) {
+        this.waitingForAnswer = true;
         this.transportShowElements([TID.Start, TID.Stop]);
     }
 
     onNoteAnswered(event: CustomEvent) {
+        this.waitingForAnswer = false;
         this.transportShowElements([TID.Stop, TID.Start]);
         let theTest = event.detail.theResults as TestResults;
         this.resultsDiv.innerText = `Total Notes: ${theTest.totalNotes} Correct: ${theTest.numCorrect} Tested Notes: ${theTest.notesTested} Wrong: ${theTest.numWrong}`;
     }
 
+    onTestStarted(event: CustomEvent) {
+        this.testRunning = true;
+    }
+
     onTestFinished(event: CustomEvent) {
+        this.testRunning = false;
         this.transportShowElements([TID.Start]);
     }
 
@@ -105,18 +116,25 @@ class PBUI {
             this.stopButtonClicked();
     }
 
+    testerCommand(theCommand: number, theParam1?: any) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerExecuteCommand, {detail: {command: theCommand, param1: theParam1}}));
+    }
+
     startButtonClicked() {
-        if (this.tester.testRunning) {
-            if (this.tester.waitingForAnswer)
+        if (this.testRunning) {
+            if (this.waitingForAnswer)
                 this.transportShowElements([TID.Stop]);
-            this.tester.pickNextNoteToTest();
+            this.waitingForAnswer = false;
+            this.testerCommand(PBConst.TESTER_COMMANDS.pickNextNote);
         }
         else
-            this.tester.startTest();
+            this.testerCommand(PBConst.TESTER_COMMANDS.start);
     }
 
     stopButtonClicked() {
-        this.tester.stopTest();
+        this.waitingForAnswer = false;
+        this.testRunning = false;
+        this.testerCommand(PBConst.TESTER_COMMANDS.stop);
     }
 
     static buildCanvasHTML(): string {
