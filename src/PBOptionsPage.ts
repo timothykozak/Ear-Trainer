@@ -7,7 +7,6 @@
 //
 
 import {PBConst} from "./PBConst.js";
-import {PBTester} from "./PBTester.js";
 import {PBKeyCustomComponent} from "./PBKeyCustomComponent.js";
 
 class PBOptionsPage {
@@ -25,7 +24,7 @@ class PBOptionsPage {
     theKCCs: PBKeyCustomComponent[];  // The key custom components (KCC).
     isDirty: boolean;   // Changes have been made.
 
-    constructor(public parentHTMLDiv: HTMLDivElement, public tester: PBTester) {
+    constructor(public parentHTMLDiv: HTMLDivElement) {
         this.initListeners();
         customElements.define('key-component', PBKeyCustomComponent);
         this.buildHTML();
@@ -89,7 +88,7 @@ class PBOptionsPage {
             for (let i = 0; i < value; i++)
                 theDegreesToTest.push(index);
         });
-        this.tester.degreesToTest = theDegreesToTest;
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerExecuteCommand, {detail: {command: PBConst.TESTER_COMMANDS.degreesToTest, param1: theDegreesToTest}}));
     }
 
     buildHTML(){
