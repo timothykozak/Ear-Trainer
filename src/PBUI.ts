@@ -210,7 +210,7 @@ class PBUI {
         this.pageContainer = document.getElementById("thePageContainer") as HTMLDivElement;
         this.pageContainer.style.visibility = 'hidden';
         let optionsHTML = document.getElementById("theOptionsPage") as HTMLDivElement;
-        this.options = new PBOptionsPage(optionsHTML, this.tester);
+        this.options = new PBOptionsPage(optionsHTML);
         this.pages[PBUI.MP_OPTIONS] = optionsHTML;
         let statsHTML = document.getElementById("theStatsPage") as HTMLDivElement;
         this.results = new PBResultsPage(statsHTML);
