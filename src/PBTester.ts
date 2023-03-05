@@ -44,6 +44,7 @@ class PBTester {
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerRunning, (event: CustomEvent) => {this.onSequencerRunning(event);})
+        document.addEventListener(PBConst.EVENTS.testerExecuteCommand, (event: CustomEvent) => {this.onExecuteCommand(event);})
     }
 
     onSequencerRunning(event: CustomEvent) {
@@ -77,6 +78,27 @@ class PBTester {
         }
     }
 
+    onExecuteCommand(event: CustomEvent) {
+        let theCommand = event.detail.command;
+        switch (theCommand) {
+            case PBConst.TESTER_COMMANDS.start:
+                this.startTest();
+                break;
+            case PBConst.TESTER_COMMANDS.stop:
+                this.stopTest();
+                break;
+            case PBConst.TESTER_COMMANDS.degreesToTest:
+                this.degreesToTest = event.detail.param1;
+                break;
+            case PBConst.TESTER_COMMANDS.pickNextNote:
+                this.pickNextNoteToTest();
+                break;
+            default:
+                this.dispatchStatusMessage(true, 'Tester received unknown command: ' + theCommand);
+                break;
+        }
+    }
+
     set degreesToTest(theDegrees: Array<number>) {
         // theDegrees contains all the degrees to test.  The same degree can show up
         // multiple times or the degree may not show up at all.  The order that the
@@ -94,6 +116,11 @@ class PBTester {
 
     get degreesToTest() {
         return(this._degreesToTest);
+    }
+
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.tester, error: isAnError, theText: theMessage}}));
     }
 
     dispatchSequencerCommand(theCommand: number, theNote: number) {
