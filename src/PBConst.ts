@@ -15,6 +15,9 @@ class PBConst {
         testerStarted: "PBTesterStarted",                       // event.detail = undefined
         testerFinished: "PBTesterFinished",                     // event.detail {theResults: TestResults}
         testerNoteAnswered: "PBTesterNoteAnswered",             // event.detail {theTestItem: TestItem, theResults: TestResults}
+        testerExecuteCommand: "PBTesterExecuteCommand",         // event.detail = {command: TESTER_COMMANDS,
+                                                                //                 param1: arbitrary
+                                                                //                 param2: arbitrary
 
         soundsInstrumentLoaded: "PBSoundsInstrumentLoaded",     // event.detail = undefined
 
@@ -126,7 +129,8 @@ class PBConst {
         midi: 2,
         sounds: 3,
         ui: 4,
-        sequencer: 5
+        sequencer: 5,
+        tester: 6
     };
 
     static  SEQUENCER_COMMANDS = {
@@ -134,6 +138,13 @@ class PBConst {
         playNote: 1,
         playCadenceAndNote: 2
     };
+
+    static TESTER_COMMANDS = {
+        start: 0,
+        stop: 1,
+        pickNextNote: 2,
+        degreesToTest: 3
+    }
 }
 
 enum NoteType {  // For notation positioning
