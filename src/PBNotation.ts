@@ -29,10 +29,10 @@ class PBNotation {
     static ORG_X_IN_NOTE_WIDTHS = 0.5;
     static ORG_Y_IN_NOTE_HEIGHTS = 6.0;
     static FONT_SIZE_IN_NOTE_WIDTHS = 2;
-    static QUALIFIED_NOTE_WIDTH_IN_NOTE_WIDTHS = 2.0;
+    static QUALIFIED_NOTE_WIDTH_IN_NOTE_WIDTHS = 2.1;
     static NOTE_HEIGHT_IN_NOTE_WIDTHS = 0.5;
     static STAFF_WIDTH_IN_NOTE_WIDTHS = 13;
-    static STAFF_HEIGHT_IN_NOTE_WIDTHS = 4.8;
+    static STAFF_HEIGHT_IN_NOTE_WIDTHS = 5.2;
     static ORG_WIDTH = 20;  // The width of the origin cross in pixels
 
     orgX = 50;  // x coord of the origin, which is the lower left corner of the treble staff
@@ -149,7 +149,7 @@ class PBNotation {
 
     static midiToQualifiedNote(midiNote: number) : QualifiedNote {
         // A qualified note is the degree plus a possible sharp.
-        if ((midiNote < PBConst.MIDI.LOW.KEYBOARD) || (midiNote > PBConst.MIDI.HIGH.KEYBOARD))
+        if ((midiNote < PBConst.MIDI.LOW) || (midiNote > PBConst.MIDI.HIGH))
             return({midi: -1, octave: 0, degree: 0, sharped: false});
         let theOctave = Math.floor(midiNote/ 12 - 1);
         let i = midiNote % 12;
@@ -260,10 +260,12 @@ class PBNotation {
                 ((qNote.octave - 4) * (this.noteHeight * -3.5)) +        // Take into account the octave
                 ((qNote.degree - 2) * (this.noteHeight / -2));  // Take into account the degree
             this.drawGlyph(x, y, PBConst.GLYPHS.quarterNoteUp, 'left', 'middle', color);
-            if (qNote.midi <= (PBConst.MIDI.MIDDLE_C + 1)) { // Need a ledger lines
+            if (qNote.midi <= (PBConst.MIDI.MIDDLE_C + 1)) { // Need at least one ledger line
                 this.drawGlyph(x - this.noteWidth / 4, this.orgY + (this.noteHeight * 3), PBConst.GLYPHS.ledgerLine, 'left', 'middle', color);  // For middle C
-                if (qNote.midi <= (PBConst.MIDI.MIDDLE_C - 2)) // Need a ledger lines
+                if (qNote.midi <= (PBConst.MIDI.MIDDLE_C - 2)) // Need a second ledger line
                     this.drawGlyph(x - this.noteWidth / 4, this.orgY + (this.noteHeight * 4), PBConst.GLYPHS.ledgerLine, 'left', 'middle', color);  // For A below middle C
+                if (qNote.midi <= (PBConst.MIDI.MIDDLE_C - 4)) // Need a third ledger line
+                    this.drawGlyph(x - this.noteWidth / 4, this.orgY + (this.noteHeight * 5), PBConst.GLYPHS.ledgerLine, 'left', 'middle', color);  // For A below middle C
             }
             if (qNote.sharped)
                 this.drawGlyph(x + this.noteWidth, y, PBConst.GLYPHS.sharp, 'left', 'middle', color);
