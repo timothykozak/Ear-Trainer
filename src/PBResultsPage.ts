@@ -40,7 +40,7 @@ class PBResultsPage {
 
     onNoteAnswered(event: CustomEvent) {
         let theTest = event.detail.theTestItem as TestItem;
-        let index = theTest.testNote - PBConst.MIDI.MIDDLE_C;
+        let index = theTest.testNote - PBConst.MIDI.LOW;
         if ((index >= 0) && (index <= PBResultsPage.ITEMS_PER_OCTAVE)) {
             this.theResults[index].numTests++;
             if (theTest.correct)
