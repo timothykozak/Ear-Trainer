@@ -83,14 +83,8 @@ class PBConst {
     static MIDI = {
         // On a piano keyboard, 21 is A0, 108 is C8 and 60 is C4 (middle C)
         MIDDLE_C: 60,
-        LOW: {
-            SOUND: 58,
-            KEYBOARD: 58
-                },
-        HIGH: {
-            SOUND: 73,
-            KEYBOARD: 73
-        },
+        LOW: 53,
+        HIGH: 73,
         MESSAGES: {
             // For a list of MIDI messages see:
             // https://www.midi.org/midi/specifications/item/table-1-summary-of-midi-message
