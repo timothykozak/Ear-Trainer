@@ -27,7 +27,7 @@ class PBPianoKeyboard {
     static BLACK_KEY_FILL_STYLE = 'black';
     static WHITE_KEY_FILL_STYLE = 'white';
     static HOVER_FILL_STYLE = 'darkgray';
-    static SCALE_PER_WIDTH = 0.0043;    // For determining best scale based on canvas width...
+    static SCALE_PER_WIDTH_PER_KEY = 0.000165;    // For determining best scale based on canvas width...
     static SCALE_PER_HEIGHT = 0.0065;   // and height
 
     // These two arrays are based on the 12 degree chromatic scale with C as degree 0
@@ -154,7 +154,7 @@ class PBPianoKeyboard {
     resize(theContextRect: MyRect) {
         // Calculate the scale based on the height and the width, selecting the minimum that fits.
         this.contextRect = theContextRect;
-        let scaleByWidth = this.contextRect.width * PBPianoKeyboard.SCALE_PER_WIDTH;
+        let scaleByWidth = this.contextRect.width * PBPianoKeyboard.SCALE_PER_WIDTH_PER_KEY * (PBConst.MIDI.HIGH - PBConst.MIDI.LOW);
         let scaleByHeight = this.contextRect.height * PBPianoKeyboard.SCALE_PER_HEIGHT;
         this.updateDrawingScale(Math.min(scaleByHeight, scaleByWidth));
         this.drawKeyboard();
