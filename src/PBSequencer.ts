@@ -82,7 +82,10 @@ class PBSequencer {
                 }
             });
 
-            this.sequence = this.sequence.filter((item) => {return(item.time != this.ticks)}); // Remove the processed notes
+            // Removing the processed notes inside the forEach does not work.  Need to wait until all of
+            // the notes are examined and then remove the ones that were played
+            this.sequence = this.sequence.filter((item) => {return(item.time != this.ticks)});
+
             if (this.sequence.length == 0) {    // No more notes
                 this.resetSequence();
             } else {
@@ -92,7 +95,7 @@ class PBSequencer {
     }
 
     validMIDI(theMIDI: number) : boolean {
-        return ((theMIDI >= PBConst.MIDI.LOW.SOUND) && (theMIDI <= PBConst.MIDI.HIGH.SOUND));
+        return ((theMIDI >= PBConst.MIDI.LOW) && (theMIDI <= PBConst.MIDI.HIGH));
     }
 
     addNoteToSequence(theNote: number, theState: boolean, theTime: number, theNoteType: NoteType) { // Tack to end of sequence.  To do a chord, don't increment the time
