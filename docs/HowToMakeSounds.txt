@@ -1,0 +1,17 @@
+How the Piano Sounds Were Made
+
+The piano samples were downloaded from http://theremin.music.uiowa.edu/MISpiano.html.
+Only the ff samples were used.  These aiff samples were imported one at a time,
+modified and then exported as an MP3 with the default settings.
+
+There was a wide variation with the lead in and the tailing of each note.
+All lead in times have been removed.  Each note was trimmed to a total duration of 5 seconds.
+
+There is a suprising amount of variation in the amplitudes of the samples. Using the regular waveform dB
+display, E4 had a maximum of -17db, while Ab4 had a maximum of -7dB.
+
+All of the samples were normalized to -5dB using Effect -> Volume and Compression -> Noramlize after the
+entire sample had been selected.
+
+The tails had a fade out effect applied from 2 seconds until 5 seconds using
+Effect->Fading->Fade Out.
