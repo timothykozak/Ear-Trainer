@@ -58,7 +58,7 @@ class PBSounds {
         // Generates a default array but does not populate it.
         // This is a sparse array with only the available notes defined.
         this.sounds = [];    // Index into array is the MIDI note number.
-        for (let i = PBConst.MIDI.LOW.SOUND; i <= PBConst.MIDI.HIGH.SOUND; i++) {
+        for (let i = PBConst.MIDI.LOW; i <= PBConst.MIDI.HIGH; i++) {
             this.sounds[i]= {
                 available: false,
                 buffer: null,
@@ -136,7 +136,7 @@ class PBSounds {
         this.allSoundsLoaded = false;   // Prepare for the downloading
         this.soundsAvailable = 0;
         this.soundsRequested = 0;
-        for (let i = PBConst.MIDI.LOW.SOUND; i <= PBConst.MIDI.HIGH.SOUND; i++) {    // Get the entire range
+        for (let i = PBConst.MIDI.LOW; i <= PBConst.MIDI.HIGH; i++) {    // Get the entire range
             this.soundsRequested++;
             this.loadASound(instrument.url + i + ".mp3");
         }
@@ -144,7 +144,7 @@ class PBSounds {
 
     playSound(midiNote: number) {
         // Play the note.  If already playing then stop it and start over.
-        if ((midiNote >= PBConst.MIDI.LOW.SOUND) && (midiNote <= PBConst.MIDI.HIGH.SOUND)) {
+        if ((midiNote >= PBConst.MIDI.LOW) && (midiNote <= PBConst.MIDI.HIGH)) {
             let sound = this.sounds[midiNote];
             if (sound.available) {
                 if (sound.playing) {    // Can only start once, need a new BufferSource
