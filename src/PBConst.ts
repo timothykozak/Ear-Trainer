@@ -25,7 +25,10 @@ class PBConst {
 
         handleMenu: "PBHandleMenu",                             // event.detail = PBUI.MP_?
 
-        optionsCreateTests: "PBCreateTests",                    // event.detail = standard tests
+        optionsUpdated: "PBOptionsUpdated",                     // event.detail = PBOptionsPage.options
+        optionsExecuteCommand: "PBOptionsExecuteCommand",       // event.detail =  {command: OPTIONS_COMMANDS,
+                                                                //                 param1: arbitrary
+                                                                //                 param2: arbitrary
 
         resultsReset: "PBResetResults",                         // event.detail = undefined
 
@@ -138,6 +141,10 @@ class PBConst {
         stop: 1,
         pickNextNote: 2,
         degreesToTest: 3
+    }
+
+    static OPTIONS_COMMANDS = {
+        standardTests: 0
     }
 }
 
