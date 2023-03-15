@@ -21,6 +21,7 @@ class PBOptionsPage {
         noteFrequency: number[];
         timeToWait: number;
     };
+    theDegreesToTest: number[];
     theKCCs: PBKeyCustomComponent[];  // The key custom components (KCC).
     isDirty: boolean;   // Changes have been made.
 
@@ -36,11 +37,23 @@ class PBOptionsPage {
     }
 
     initListeners() {
-        document.addEventListener(PBConst.EVENTS.optionsCreateTests, (event: CustomEvent) => {this.onCreateTests(event)}, false);
+        document.addEventListener(PBConst.EVENTS.optionsExecuteCommand, (event: CustomEvent) => {this.onExecuteCommand(event)}, false);
     }
 
-    onCreateTests(event: CustomEvent) {
-        this.createStandardTest(event.detail);
+    onExecuteCommand(event: CustomEvent) {
+        let theCommand:number = event.detail.command;
+        switch(theCommand) {
+            case PBConst.OPTIONS_COMMANDS.standardTests:
+                this.createStandardTest(event.detail.param1);
+                break;
+            default:
+        }
+    }
+
+    optionsUpdated(){
+        this.createNewTest();
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.optionsUpdated, {detail: this.theOptions}));
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerExecuteCommand, {detail: {command: PBConst.TESTER_COMMANDS.degreesToTest, param1: this.theDegreesToTest}}));
     }
 
     restoreOptions() {
@@ -53,13 +66,14 @@ class PBOptionsPage {
         }
         this.setKCCValues();
         this.createNewTest();
+        this.optionsUpdated();
     }
 
     lostFocus(){
         // The page has lost the focus
         if (this.isDirty) { // Changes have been made.  Need to make a new test.
-            this.createNewTest();
             this.isDirty = false;
+            this.optionsUpdated();
         }
     }
 
@@ -83,12 +97,12 @@ class PBOptionsPage {
     createNewTest() {
         // Takes the noteFrequency array and creates an array of degrees
         // to be tested by the tester.
-        let theDegreesToTest: Array<number> = [];
+        this.isDirty = true;
+        this.theDegreesToTest = [];
         this.theOptions.noteFrequency.forEach((value, index) => {
             for (let i = 0; i < value; i++)
-                theDegreesToTest.push(index);
+                this.theDegreesToTest.push(index);
         });
-        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerExecuteCommand, {detail: {command: PBConst.TESTER_COMMANDS.degreesToTest, param1: theDegreesToTest}}));
     }
 
     buildHTML(){
@@ -96,15 +110,15 @@ class PBOptionsPage {
         this.parentHTMLDiv.insertAdjacentHTML('beforeend',
             `<div>
                 <input type="button" value="None" 
-                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 0}));">
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsExecuteCommand}', {detail: {command: ${PBConst.OPTIONS_COMMANDS.standardTests}, param1: 0}}));">
                 <input type="button" value="I IV V" 
-                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 1}));">
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsExecuteCommand}', {detail: {command: ${PBConst.OPTIONS_COMMANDS.standardTests}, param1: 1}}));">
                 <input type="button" value="White"
-                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 2}));">
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsExecuteCommand}', {detail: {command: ${PBConst.OPTIONS_COMMANDS.standardTests}, param1: 2}}));">
                 <input type="button" value="Black"
-                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 3}));">
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsExecuteCommand}', {detail: {command: ${PBConst.OPTIONS_COMMANDS.standardTests}, param1: 3}}));">
                 <input type="button" value="All"
-                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsCreateTests}', {detail: 4}));">
+                    onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsExecuteCommand}', {detail: {command: ${PBConst.OPTIONS_COMMANDS.standardTests}, param1: 4}}));">
                 <key-component id="idKeyCC_C" x="100" y="200" label="C" ></key-component>
                 <key-component id="idKeyCC_D" x="140" y="200" label="D" ></key-component>
                 <key-component id="idKeyCC_E" x="180" y="200" label="E" ></key-component>
