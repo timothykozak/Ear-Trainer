@@ -9,6 +9,7 @@
 import {SequenceItem} from "./PBSequencer.js";
 import {PBConst} from "./PBConst.js";
 import {MyRect} from "./PBUI.js";
+import {MyOptions, DEFAULT_OPTIONS} from "./PBOptionsPage.js";
 
 interface KeyRegion {
     path: Path2D,
@@ -34,15 +35,14 @@ class PBPianoKeyboard {
     static WHITE_KEYS = [true, false, true, false, true, true, false, true, false, true, false, true];
     static X_OFFSET = [ 0, -3, 0, 3, 0, 0, -3, 0, 0, 0, 3, 0];   // Most of the black keys are not centered
     keyRegions: KeyRegion[];
+    theOptions: MyOptions = DEFAULT_OPTIONS;
 
     drawingScale: number = 3;   // This scale is adjusted on resize
     hoverKey: number = -1;  // Key over which the mouse is hovering.  -1 means no key.
 
     constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public contextRect: MyRect) {
-        if (canvas) {
-            this.initListeners();
-            this.resize(this.contextRect);
-        }
+        this.initListeners();
+        this.resize(this.contextRect);
     }
 
     initListeners() {
@@ -50,7 +50,7 @@ class PBPianoKeyboard {
         this.canvas.addEventListener(PBConst.EVENTS.mouseLeave, (event: MouseEvent) => {this.onMouseLeave(event);});
         this.canvas.addEventListener(PBConst.EVENTS.mouseMove, (event: MouseEvent) => {this.onMouseMove(event);});
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencerNotePlayed(event);}, false);
-        document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.drawKeyboard();}, false);
+        document.addEventListener(PBConst.EVENTS.optionsUpdated, (event: CustomEvent) => {this.onOptionsUpdated(event);}, false);
     }
 
     dispatchStatusMessage(isAnError: boolean, theMessage: string) {
@@ -131,6 +131,11 @@ class PBPianoKeyboard {
         }
     }
 
+    onOptionsUpdated(event: CustomEvent) {
+        this.theOptions = event.detail;
+        this.drawKeyboard();
+    }
+
     fillRegion(index: number, hover: boolean) {
         if ((index >= 0) && (index < this.keyRegions.length)) { // Valid region
             this.context.save();
@@ -154,7 +159,7 @@ class PBPianoKeyboard {
     resize(theContextRect: MyRect) {
         // Calculate the scale based on the height and the width, selecting the minimum that fits.
         this.contextRect = theContextRect;
-        let scaleByWidth = this.contextRect.width * PBPianoKeyboard.SCALE_PER_WIDTH_PER_KEY * (PBConst.MIDI.HIGH - PBConst.MIDI.LOW);
+        let scaleByWidth = this.contextRect.width * PBPianoKeyboard.SCALE_PER_WIDTH_PER_KEY * (this.theOptions.midiHigh - this.theOptions.midiLow);
         let scaleByHeight = this.contextRect.height * PBPianoKeyboard.SCALE_PER_HEIGHT;
         this.updateDrawingScale(Math.min(scaleByHeight, scaleByWidth));
         this.drawKeyboard();
@@ -211,8 +216,10 @@ class PBPianoKeyboard {
         let orgY = this.contextRect.y;
         let thePath: Path2D = null;
         let theFillStyle: string = null;
+        let midiLow = this.theOptions.midiLow;
+        let midiHigh = this.theOptions.midiHigh;
 
-        for (let midiIndex = PBConst.MIDI.LOW; midiIndex <= PBConst.MIDI.HIGH; midiIndex++) {
+        for (let midiIndex = midiLow; midiIndex <= midiHigh; midiIndex++) {
             let white = PBPianoKeyboard.WHITE_KEYS[this.midiToScale(midiIndex)];
             if (white) {
                 thePath = this.buildWhiteKeyPath(orgX, orgY, midiIndex);
