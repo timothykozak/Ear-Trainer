@@ -127,7 +127,8 @@ class PBConst {
         sounds: 3,
         ui: 4,
         sequencer: 5,
-        tester: 6
+        tester: 6,
+        optionsPage: 7
     };
 
     static  SEQUENCER_COMMANDS = {
@@ -144,7 +145,8 @@ class PBConst {
     }
 
     static OPTIONS_COMMANDS = {
-        standardTests: 0
+        standardTests: 0,
+        requestOptions: 1
     }
 }
 
