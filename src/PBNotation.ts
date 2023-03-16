@@ -8,6 +8,7 @@ import {SequenceItem, NoteType} from "./PBSequencer.js";
 import {PBConst} from "./PBConst.js";
 import {PBUI, MyRect} from "./PBUI.js";
 import {TestItem} from "./PBTester.js";
+import {DEFAULT_OPTIONS, MyOptions} from "./PBOptionsPage";
 
 interface GlyphItem {
     value: string,
@@ -37,6 +38,7 @@ class PBNotation {
 
     orgX = 50;  // x coord of the origin, which is the lower left corner of the treble staff
     orgY = 250; // y coord of the origin
+    theOptions: MyOptions = DEFAULT_OPTIONS;
 
     static xByNoteType = [2, 3, 4, 5, 6, 8, 10];  // Units are noteWidth
 
@@ -66,6 +68,7 @@ class PBNotation {
         document.addEventListener(PBConst.EVENTS.keyboardHover, (event: CustomEvent) => {this.onHover(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.redraw();}, false);
+        document.addEventListener(PBConst.EVENTS.optionsUpdated, (event: CustomEvent) => {this.onOptionsUpdated(event);}, false);
     }
 
     onAnswered(event: CustomEvent) {
@@ -121,6 +124,11 @@ class PBNotation {
             this.drawQualifiedNote(x, PBNotation.midiToQualifiedNote(midiNote), color);
         this.drawAnswerNote();
         this.context.restore(); // Restore old clipping path
+    }
+
+    onOptionsUpdated(event: CustomEvent) {
+        this.theOptions = event.detail;
+        this.redraw();
     }
     
     resize(theContextRect: MyRect) {
