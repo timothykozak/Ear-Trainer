@@ -8,7 +8,7 @@ import {SequenceItem, NoteType} from "./PBSequencer.js";
 import {PBConst} from "./PBConst.js";
 import {PBUI, MyRect} from "./PBUI.js";
 import {TestItem} from "./PBTester.js";
-import {DEFAULT_OPTIONS, MyOptions} from "./PBOptionsPage";
+import {DEFAULT_OPTIONS, MyOptions} from "./PBOptionsPage.js";
 
 interface GlyphItem {
     value: string,
