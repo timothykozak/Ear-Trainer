@@ -9,6 +9,14 @@
 import {PBConst} from "./PBConst.js";
 import {PBKeyCustomComponent} from "./PBKeyCustomComponent.js";
 
+interface MyOptions {
+    noteFrequency: number[];    // By degree of the 12 note scale
+    timeToWait: number;         // In PBSequencer ticks
+    tonic: number;              // The tonic of the key, C Major = MIDI 60
+    midiLow: number;            // The lowest note on the piano keyboard, which is >= PBConst.MIDI.LOW
+    midiHigh: number;           // The highest note on the piano keyboard, which is <= PBConst.MIDI.HIGH
+}
+
 class PBOptionsPage {
     static NOTES_IN_OCTAVE = 12;
     static NOTE_FREQUENCY_NONE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -17,10 +25,7 @@ class PBOptionsPage {
     static NOTE_FREQUENCY_WHITE = [5, 0, 5, 0, 5, 5, 0, 5, 0, 5, 0, 5];
     static NOTE_FREQUENCY_BLACK = [0, 5, 0, 5, 0, 0, 5, 0, 5, 0, 5, 0];
 
-    theOptions: {
-        noteFrequency: number[];
-        timeToWait: number;
-    };
+    theOptions: MyOptions;
     theDegreesToTest: number[];
     theKCCs: PBKeyCustomComponent[];  // The key custom components (KCC).
     isDirty: boolean;   // Changes have been made.
@@ -40,19 +45,33 @@ class PBOptionsPage {
         document.addEventListener(PBConst.EVENTS.optionsExecuteCommand, (event: CustomEvent) => {this.onExecuteCommand(event)}, false);
     }
 
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.optionsPage, error: isAnError, theText: theMessage}}));
+    }
+
     onExecuteCommand(event: CustomEvent) {
         let theCommand:number = event.detail.command;
         switch(theCommand) {
             case PBConst.OPTIONS_COMMANDS.standardTests:
                 this.createStandardTest(event.detail.param1);
                 break;
+            case PBConst.OPTIONS_COMMANDS.requestOptions:
+                this.dispatchOptionsUpdated();
+                break;
             default:
+                this.dispatchStatusMessage(true, 'Unrecognized command: ' + theCommand);
+                break;
         }
+    }
+
+    dispatchOptionsUpdated() {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.optionsUpdated, {detail: this.theOptions}));
     }
 
     optionsUpdated(){
         this.createNewTest();
-        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.optionsUpdated, {detail: this.theOptions}));
+        this.dispatchOptionsUpdated();
         document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerExecuteCommand, {detail: {command: PBConst.TESTER_COMMANDS.degreesToTest, param1: this.theDegreesToTest}}));
     }
 
@@ -60,12 +79,9 @@ class PBOptionsPage {
         // Need to get the options from the browser.
         this.theOptions = JSON.parse(localStorage.getItem(PBConst.STORAGE.optionsPage));
         if (!this.theOptions) {
-            this.theOptions = {
-                noteFrequency: PBOptionsPage.NOTE_FREQUENCY_I_IV_V,
-                timeToWait: 10 };
+            this.theOptions = DEFAULT_OPTIONS;
         }
         this.setKCCValues();
-        this.createNewTest();
         this.optionsUpdated();
     }
 
@@ -168,4 +184,12 @@ class PBOptionsPage {
     }
 }
 
-export {PBOptionsPage};
+const DEFAULT_OPTIONS: MyOptions = {
+    noteFrequency: PBOptionsPage.NOTE_FREQUENCY_I_IV_V,
+    timeToWait: 10,
+    tonic: 60,
+    midiLow: 60,
+    midiHigh: 72
+};
+
+export {PBOptionsPage, MyOptions, DEFAULT_OPTIONS};
