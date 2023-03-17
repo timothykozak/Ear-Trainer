@@ -43,7 +43,6 @@ class PBPianoKeyboard {
     constructor(public canvas: HTMLCanvasElement, public context: CanvasRenderingContext2D, public contextRect: MyRect) {
         this.initListeners();
         this.resize(this.contextRect);
-        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.optionsExecuteCommand, {detail: {command: PBConst.OPTIONS_COMMANDS.requestOptions}}));
     }
 
     initListeners() {
