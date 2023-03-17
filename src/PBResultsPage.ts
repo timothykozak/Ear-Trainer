@@ -7,6 +7,7 @@
 import {TestItem} from "./PBTester.js";
 import {PBConst} from "./PBConst.js";
 import {PBResultCustomComponent} from "./PBResultCustomComponent.js";
+import {MyOptions, DEFAULT_OPTIONS} from "./PBOptionsPage.js";
 
 interface ResultItem {
     numTests: number,
@@ -18,6 +19,7 @@ class PBResultsPage {
 
     theResults: Array<ResultItem>;
     theRCCs: Array<PBResultCustomComponent>;    // The results custom components.
+    theOptions: MyOptions = DEFAULT_OPTIONS;
 
     constructor(public parentHTMLDiv: HTMLDivElement) {
         customElements.define('result-component', PBResultCustomComponent);
@@ -31,6 +33,7 @@ class PBResultsPage {
         window.addEventListener(PBConst.EVENTS.unload, () => { this.onUnload()});
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onNoteAnswered(event);}, false);
         document.addEventListener(PBConst.EVENTS.resultsReset, (event: CustomEvent) => {this.onInitResults(event);}, false);
+        document.addEventListener(PBConst.EVENTS.optionsUpdated, (event: CustomEvent) => {this.onOptionsUpdated(event);}, false);
     }
 
     onUnload(){
@@ -38,10 +41,14 @@ class PBResultsPage {
         localStorage.setItem(PBConst.STORAGE.statsPage, JSON.stringify(this.theResults));
     }
 
+    onOptionsUpdated(event: CustomEvent) {
+        this.theOptions = event.detail;
+    }
+
     onNoteAnswered(event: CustomEvent) {
         let theTest = event.detail.theTestItem as TestItem;
-        let index = theTest.testNote - PBConst.MIDI.LOW;
-        if ((index >= 0) && (index <= PBResultsPage.ITEMS_PER_OCTAVE)) {
+        let index = (theTest.testNote - this.theOptions.midiLow) % PBResultsPage.ITEMS_PER_OCTAVE;
+        if (index >= 0) {
             this.theResults[index].numTests++;
             if (theTest.correct)
                 this.theResults[index].numCorrect++;
@@ -70,7 +77,7 @@ class PBResultsPage {
     }
 
     restoreResults() {
-        // Need to get the options from the browser.
+        // Need to get the results from the browser.
         this.theResults = JSON.parse(localStorage.getItem(PBConst.STORAGE.statsPage));
         if (!this.theResults) {
             this.initResults();
