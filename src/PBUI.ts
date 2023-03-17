@@ -16,8 +16,7 @@ import {PBNotation} from "./PBNotation.js";
 import {PBPianoKeyboard} from "./PBPianoKeyboard.js";
 import {PBOptionsPage} from "./PBOptionsPage.js";
 import {PBResultsPage} from "./PBResultsPage.js";
-import {PBTester, TestResults} from "./PBTester";
-import {Custom} from "webfontloader";
+import {TestResults} from "./PBTester";
 
 interface MyRect {
     x: number, // Of the upper left corner
@@ -68,6 +67,9 @@ class PBUI {
         this.onResizeFinished();    // The initial sizing
         this.assignOnResize();
         this.initListeners();
+        // Although PBOptionsPage sends out the optionsUpdated event at instantiation, this happens before some of
+        // the other classes have been instantiated.  Ask for another optionsUpdated event.
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.optionsExecuteCommand, {detail: {command: PBConst.OPTIONS_COMMANDS.requestOptions}}));
     }
 
     initListeners() {
