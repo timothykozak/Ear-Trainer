@@ -5,6 +5,7 @@
 //
 
 import {PBConst} from "./PBConst.js";
+import {MyOptions, DEFAULT_OPTIONS} from "./PBOptionsPage.js"
 
 interface TestItem {
     testNote: number,
@@ -24,11 +25,11 @@ interface TestResults {
 }
 
 class PBTester {
-    static DEGREE_MIN = 0;  // The degree is the position in the 12 tone musical scale,
-                            // with 0 = C, 1 = C#, 2 = D, ... 11 = B
+    static DEGREE_MIN = 0;  // The degree is the position in the 12 tone musical scale in solfege,
+                            // with 0 = do, 1 = di, 2 = re, ... 11 = ti
     static DEGREE_MAX = 11;
-    static TEST_ALL = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
+    theOptions: MyOptions = DEFAULT_OPTIONS;
     private _degreesToTest: Array<number>;  // The degrees to be tested
     testRunning: boolean = false;
     sequencerRunning: boolean = false;
@@ -41,10 +42,15 @@ class PBTester {
     }
 
     initListeners() {
+        document.addEventListener(PBConst.EVENTS.optionsUpdated, (event: CustomEvent) => {this.onOptionsUpdated(event);});
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerTestNotePlayed, (event: CustomEvent) => {this.onTestNotePlayed(event);}, false);
         document.addEventListener(PBConst.EVENTS.sequencerRunning, (event: CustomEvent) => {this.onSequencerRunning(event);})
         document.addEventListener(PBConst.EVENTS.testerExecuteCommand, (event: CustomEvent) => {this.onExecuteCommand(event);})
+    }
+
+    onOptionsUpdated(event: CustomEvent) {
+        this.theOptions = event.detail;
     }
 
     onSequencerRunning(event: CustomEvent) {
@@ -60,7 +66,7 @@ class PBTester {
         // Check if the note played was the answer note.
         if (this.waitingForAnswer && event.detail.state) {  // Make sure to disregard the note off of the degreeBeingTested note
             this.waitingForAnswer = false;
-            let midiNote = this.degreeBeingTested + PBConst.MIDI.MIDDLE_C;
+            let midiNote = this.degreeBeingTested + this.theOptions.tonic;
             let correctAnswer = (event.detail.note == midiNote);
 
             this.results.notesTested++; // Update the testItems
@@ -76,6 +82,11 @@ class PBTester {
             this.results.testItems.push(testItem);
             document.dispatchEvent(new CustomEvent(PBConst.EVENTS.testerNoteAnswered, {detail: {theTestItem: testItem, theResults: this.results}}));
         }
+    }
+
+    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
+        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
+          {detail: {theType: PBConst.MESSAGE_TYPE.tester, error: isAnError, theText: theMessage}}));
     }
 
     onExecuteCommand(event: CustomEvent) {
@@ -112,15 +123,6 @@ class PBTester {
             this._degreesToTest = theDegrees;    // None at all.  Possibly an error condition.  Allow for now.
         else
             this._degreesToTest = theDegrees;
-    }
-
-    get degreesToTest() {
-        return(this._degreesToTest);
-    }
-
-    dispatchStatusMessage(isAnError: boolean, theMessage: string) {
-        document.dispatchEvent(new CustomEvent(PBConst.EVENTS.statusMessage,
-          {detail: {theType: PBConst.MESSAGE_TYPE.tester, error: isAnError, theText: theMessage}}));
     }
 
     dispatchSequencerCommand(theCommand: number, theNote: number) {
