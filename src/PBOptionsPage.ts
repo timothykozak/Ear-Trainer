@@ -135,25 +135,25 @@ class PBOptionsPage {
                     onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsExecuteCommand}', {detail: {command: ${PBConst.OPTIONS_COMMANDS.standardTests}, param1: 3}}));">
                 <input type="button" value="All"
                     onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.optionsExecuteCommand}', {detail: {command: ${PBConst.OPTIONS_COMMANDS.standardTests}, param1: 4}}));">
-                <key-component id="idKeyCC_C" x="100" y="200" label="C" ></key-component>
-                <key-component id="idKeyCC_D" x="140" y="200" label="D" ></key-component>
-                <key-component id="idKeyCC_E" x="180" y="200" label="E" ></key-component>
-                <key-component id="idKeyCC_F" x="220" y="200" label="F" ></key-component>
-                <key-component id="idKeyCC_G" x="260" y="200" label="G" ></key-component>
-                <key-component id="idKeyCC_A" x="300" y="200" label="A" ></key-component>
-                <key-component id="idKeyCC_B" x="340" y="200" label="B" ></key-component>
-                <key-component id="idKeyCC_C#" x="120" y="50" label="C#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idKeyCC_D#" x="160" y="50" label="D#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idKeyCC_F#" x="240" y="50" label="F#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idKeyCC_G#" x="280" y="50" label="G#" backgroundColor="black" fontColor="white"></key-component>
-                <key-component id="idKeyCC_A#" x="320" y="50" label="A#" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_Do" x="100" y="200" label="Do" ></key-component>
+                <key-component id="idKeyCC_Re" x="140" y="200" label="Re" ></key-component>
+                <key-component id="idKeyCC_Mi" x="180" y="200" label="Mi" ></key-component>
+                <key-component id="idKeyCC_Fa" x="220" y="200" label="Fa" ></key-component>
+                <key-component id="idKeyCC_So" x="260" y="200" label="So" ></key-component>
+                <key-component id="idKeyCC_La" x="300" y="200" label="La" ></key-component>
+                <key-component id="idKeyCC_Ti" x="340" y="200" label="Ti" ></key-component>
+                <key-component id="idKeyCC_Di" x="120" y="50" label="Di" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_Ri" x="160" y="50" label="Ri" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_Fi" x="240" y="50" label="Fi" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_Si" x="280" y="50" label="Si" backgroundColor="black" fontColor="white"></key-component>
+                <key-component id="idKeyCC_Li" x="320" y="50" label="Li" backgroundColor="black" fontColor="white"></key-component>
             </div>
             `);
     }
 
     getKCCs() {
         // Set the key custom component ids
-        let theNames: string[] = ['idKeyCC_C', 'idKeyCC_C#', 'idKeyCC_D', 'idKeyCC_D#', 'idKeyCC_E', 'idKeyCC_F', 'idKeyCC_F#', 'idKeyCC_G', 'idKeyCC_G#', 'idKeyCC_A', 'idKeyCC_A#', 'idKeyCC_B'];
+        let theNames: string[] = ['idKeyCC_Do', 'idKeyCC_Di', 'idKeyCC_Re', 'idKeyCC_Ri', 'idKeyCC_Mi', 'idKeyCC_Fa', 'idKeyCC_Fi', 'idKeyCC_So', 'idKeyCC_Si', 'idKeyCC_La', 'idKeyCC_Li', 'idKeyCC_Ti'];
         this.theKCCs = [];
         theNames.forEach((theName, index) => {this.theKCCs[index] = document.getElementById(theName) as PBKeyCustomComponent;});
     }
