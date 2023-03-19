@@ -91,25 +91,25 @@ class PBResultsPage {
             `<div>
                 <input type="button" value="Clear Results"
                     onclick="document.dispatchEvent(new CustomEvent('${PBConst.EVENTS.resultsReset}', {detail: null}));">
-                <result-component id="idResultCC_C" x="100" y="200" label="C" ></result-component>
-                <result-component id="idResultCC_D" x="140" y="200" label="D" ></result-component>
-                <result-component id="idResultCC_E" x="180" y="200" label="E" ></result-component>
-                <result-component id="idResultCC_F" x="220" y="200" label="F" ></result-component>
-                <result-component id="idResultCC_G" x="260" y="200" label="G" ></result-component>
-                <result-component id="idResultCC_A" x="300" y="200" label="A" ></result-component>
-                <result-component id="idResultCC_B" x="340" y="200" label="B" ></result-component>
-                <result-component id="idResultCC_C#" x="120" y="50" label="C#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idResultCC_D#" x="160" y="50" label="D#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idResultCC_F#" x="240" y="50" label="F#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idResultCC_G#" x="280" y="50" label="G#" backgroundColor="black" fontColor="white"></result-component>
-                <result-component id="idResultCC_A#" x="320" y="50" label="A#" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_Do" x="100" y="200" label="Do" ></result-component>
+                <result-component id="idResultCC_Re" x="140" y="200" label="Re" ></result-component>
+                <result-component id="idResultCC_Mi" x="180" y="200" label="Mi" ></result-component>
+                <result-component id="idResultCC_Fa" x="220" y="200" label="Fa" ></result-component>
+                <result-component id="idResultCC_So" x="260" y="200" label="So" ></result-component>
+                <result-component id="idResultCC_La" x="300" y="200" label="La" ></result-component>
+                <result-component id="idResultCC_Ti" x="340" y="200" label="Ti" ></result-component>
+                <result-component id="idResultCC_Di" x="120" y="50" label="Di" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_Ri" x="160" y="50" label="Ri" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_Fi" x="240" y="50" label="Fi" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_Si" x="280" y="50" label="Si" backgroundColor="black" fontColor="white"></result-component>
+                <result-component id="idResultCC_Li" x="320" y="50" label="Li" backgroundColor="black" fontColor="white"></result-component>
             </div>
             `);
     }
 
     getRCCIds() {
         // Get the results custom components
-        let theNames: string[] = ['idResultCC_C', 'idResultCC_C#', 'idResultCC_D', 'idResultCC_D#', 'idResultCC_E', 'idResultCC_F', 'idResultCC_F#', 'idResultCC_G', 'idResultCC_G#', 'idResultCC_A', 'idResultCC_A#', 'idResultCC_B'];
+        let theNames: string[] = ['idResultCC_Do', 'idResultCC_Di', 'idResultCC_Re', 'idResultCC_Ri', 'idResultCC_Mi', 'idResultCC_Fa', 'idResultCC_Fi', 'idResultCC_So', 'idResultCC_Si', 'idResultCC_La', 'idResultCC_Li', 'idResultCC_Ti'];
         this.theRCCs = [];
         theNames.forEach((theName, index) => {this.theRCCs[index] = document.getElementById(theName) as PBResultCustomComponent;});
     }
