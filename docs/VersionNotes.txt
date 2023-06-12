@@ -1,3 +1,12 @@
 v0.3 was released on 2-28-23
 
--
+- Added VersionNotes.txt to github.
+- Removed some unused deployment servers.
+- Decoupled the sequencer and the tester.
+- Decoupling should be complete.
+- Updated files of the serviceworker.
+- Piano keyboard supports abritrary start and end note.
+- Initial support for KeySignature.
+
+ ~
+
