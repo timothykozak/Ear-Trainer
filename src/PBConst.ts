@@ -63,8 +63,9 @@ class PBConst {
         quarterNoteUp:      {value: '\u{0e1d5}', rem: 1.0},
         quarterNoteDown:    {value: '\u{0e1d6}', rem: 1.0},
 
-        sharp:              {value: '\u{0e262}', rem: 1.0},
         flat:               {value: '\u{0e260}', rem: 1.0},
+        natural:            {value: '\u{0e261}', rem: 1.0},
+        sharp:              {value: '\u{0e262}', rem: 1.0},
 
         // ionicons
         checkMark:          {value: '\u{0f121}', rem: 0.3},
@@ -110,6 +111,8 @@ class PBConst {
         }
     };
 
+    static CHROMATIC_DEGREES_IN_OCTAVE = 12;
+
     static TRANSPORT_BUTTONS = {
         START: 0,
         STOP: 1
@@ -150,6 +153,28 @@ class PBConst {
     }
 }
 
+enum Accidentals {
+    none,
+    sharp,
+    flat,
+    natural
+}
+
+enum KeySignature {
+    Gb,
+    Db,
+    Ab,
+    Eb,
+    Bb,
+    F,
+    C,
+    G,
+    D,
+    A,
+    E,
+    B
+}
+
 enum NoteType {  // For notation positioning
     Cadence1,
     Cadence2,
@@ -168,4 +193,4 @@ enum TID { // Transport IDs
     Forward
 }
 
-export {PBConst, NoteType, TID};
+export {PBConst, Accidentals, KeySignature, NoteType, TID};
