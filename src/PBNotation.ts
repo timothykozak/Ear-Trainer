@@ -4,9 +4,9 @@
 // This module handles the musical notation.  It is passed an HTMLCanvasElement
 // on which it draws out the treble staff in the key of C Major.
 
-import {SequenceItem, NoteType} from "./PBSequencer.js";
-import {PBConst} from "./PBConst.js";
-import {PBUI, MyRect} from "./PBUI.js";
+import {NoteType, SequenceItem} from "./PBSequencer.js";
+import {Accidentals, KeySignature, PBConst} from "./PBConst.js";
+import {MyRect, PBUI} from "./PBUI.js";
 import {TestItem} from "./PBTester.js";
 import {DEFAULT_OPTIONS, MyOptions} from "./PBOptionsPage.js";
 
@@ -15,12 +15,17 @@ interface GlyphItem {
     rem: number
 }
 
+interface ChromaticNote {
+    degree: number, // The diatonic degree, 0 is the tonic
+    accidental: Accidentals
+}
+
 interface QualifiedNote {
     // A qualified note fully defines the note
     midi: number,   // Middle C is 60
     octave: number, // Middle C is octave 4
-    degree: number, // C is degree 0
-    sharped: boolean
+    degree: number, // The diatonic degree, 0 is the tonic
+    accidental: Accidentals
 }
 
 class PBNotation {
@@ -36,13 +41,17 @@ class PBNotation {
     static STAFF_HEIGHT_IN_NOTE_WIDTHS = 5.2;
     static ORG_WIDTH = 20;  // The width of the origin cross in pixels
 
-    orgX = 50;  // x coord of the origin, which is the lower left corner of the treble staff
-    orgY = 250; // y coord of the origin
     theOptions: MyOptions = DEFAULT_OPTIONS;
 
-    static xByNoteType = [2, 3, 4, 5, 6, 8, 10];  // Units are noteWidth
+    static xByNoteType = [2, 3, 4, 5, 6, 8, 10];  // Units are in noteWidths
 
-    // These sizes are updated when the contextRect is resized.
+    static tonicByKeySignature = [54, 61, 56, 63, 58, 53, 60, 55, 62, 57, 64, 59];   // Midi note
+    static accidentalsByKeySignature = [-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5];  // Negative is a flat, positive is a sharp
+
+
+    // These values are updated in the constructor and when the contextRect is resized.
+    orgX: number;  // Coords of the origin, which is the lower left corner of the treble staff
+    orgY: number;
     fontSize: number;
     noteWidth: number;
     noteHeight: number;
@@ -50,7 +59,7 @@ class PBNotation {
     currentHoverNote: number;   // A midi value, or -1 if not hovering.
     answerNote: QualifiedNote = null;
     answerNoteCorrect: boolean;
-    answerNoteCorrectX: number;
+    answerNoteCorrectX: number; // Where the check mark or x is drawn
     answerNoteCorrectY: number;
 
     grandStaff: boolean = false;
@@ -74,7 +83,7 @@ class PBNotation {
     onAnswered(event: CustomEvent) {
         // Called when the note being tested is answered.
         this.answerNoteCorrect = (event.detail.theTestItem as TestItem).correct;
-        this.answerNote = PBNotation.midiToQualifiedNote(event.detail.theTestItem.answerNote);
+        this.answerNote = this.midiToQualifiedNote(event.detail.theTestItem.answerNote);
         this.drawHoverNote(this.currentHoverNote);
     }
 
@@ -121,7 +130,7 @@ class PBNotation {
             this.drawRect(hoverRect.x, hoverRect.y, hoverRect.width, hoverRect.height, 1, 'red', 'butt');
         this.drawGlyph(x - this.noteWidth, y, PBConst.GLYPHS.staff5Lines, 'left', 'middle', 'black', 3);
         if (midiNote != -1)
-            this.drawQualifiedNote(x, PBNotation.midiToQualifiedNote(midiNote), color);
+            this.drawQualifiedNote(x, this.midiToQualifiedNote(midiNote), color);
         this.drawAnswerNote();
         this.context.restore(); // Restore old clipping path
     }
@@ -155,15 +164,35 @@ class PBNotation {
         this.noteHeight = this.noteWidth * PBNotation.NOTE_HEIGHT_IN_NOTE_WIDTHS;
     }
 
-    static midiToQualifiedNote(midiNote: number) : QualifiedNote {
-        // A qualified note is the degree plus a possible sharp.
+    generateChormaticScale() : Array<ChromaticNote> {
+        // The chromatic scale is the 12 note scale that contains the degree of the octave along
+        // with the accidental.  This is based on the KeySignature.  With keys based on sharps,
+        //
+        let theScale: Array<ChromaticNote> = [  {degree: 0, accidental: Accidentals.none},
+                                                {degree: 0, accidental: Accidentals.sharp},
+                                                {degree: 1, accidental: Accidentals.none},
+                                                {degree: 1, accidental: Accidentals.sharp},
+                                                {degree: 2, accidental: Accidentals.none},
+                                                {degree: 3, accidental: Accidentals.none},
+                                                {degree: 3, accidental: Accidentals.sharp},
+                                                {degree: 4, accidental: Accidentals.none},
+                                                {degree: 4, accidental: Accidentals.sharp},
+                                                {degree: 5, accidental: Accidentals.none},
+                                                {degree: 5, accidental: Accidentals.sharp},
+                                                {degree: 6, accidental: Accidentals.none}    ];
+        return(theScale);
+    }
+
+    midiToQualifiedNote(midiNote: number) : QualifiedNote {
+        // A qualified note is the diatonic degree plus a possible accidental.
         if ((midiNote < PBConst.MIDI.LOW) || (midiNote > PBConst.MIDI.HIGH))
-            return({midi: -1, octave: 0, degree: 0, sharped: false});
-        let theOctave = Math.floor(midiNote/ 12 - 1);
-        let i = midiNote % 12;
-        let theDegree = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7]; // The twelve notes in the octave, starting with C
-        let isSharped = [false, true, false, true, false, false, true, false, true, false, true, false];
-        return({midi: midiNote, octave: theOctave, degree: theDegree[i], sharped: isSharped[i]});
+            return({midi: -1, octave: 0, degree: 0, accidental: Accidentals.none});
+        let CDIO = PBConst.CHROMATIC_DEGREES_IN_OCTAVE;
+        let theOctave = Math.floor(midiNote / CDIO - 1);
+        let theChromaticDegree = (midiNote + this.theOptions.keySignature - KeySignature.C) % CDIO;  // Find the chromatic degree relative to the tonic
+        let theChromaticScale = this.generateChormaticScale();
+        let theChromaticNote = theChromaticScale[theChromaticDegree];
+        return({midi: midiNote, octave: theOctave, degree: theChromaticNote.degree, accidental: theChromaticNote.accidental});
     }
 
     onSequencer (event: CustomEvent) {
@@ -257,7 +286,7 @@ class PBNotation {
     }
 
     drawNote(x: number, theMidi: number) {
-        this.drawQualifiedNote(x, PBNotation.midiToQualifiedNote(theMidi));
+        this.drawQualifiedNote(x, this.midiToQualifiedNote(theMidi));
     }
 
     drawQualifiedNote(x: number, qNote: QualifiedNote, color: string = 'black') {
@@ -267,7 +296,8 @@ class PBNotation {
             let y = this.orgY +
                 ((qNote.octave - 4) * (this.noteHeight * -3.5)) +        // Take into account the octave
                 ((qNote.degree - 2) * (this.noteHeight / -2));  // Take into account the degree
-            this.drawGlyph(x, y, PBConst.GLYPHS.quarterNoteUp, 'left', 'middle', color);
+            this.drawGlyph(x, y, PBConst.GLYPHS.quarterNoteUp, 'left', 'middle', color);    // Draw the raw note
+
             if (qNote.midi <= (PBConst.MIDI.MIDDLE_C + 1)) { // Need at least one ledger line
                 this.drawGlyph(x - this.noteWidth / 4, this.orgY + (this.noteHeight * 3), PBConst.GLYPHS.ledgerLine, 'left', 'middle', color);  // For middle C
                 if (qNote.midi <= (PBConst.MIDI.MIDDLE_C - 2)) // Need a second ledger line
@@ -275,8 +305,18 @@ class PBNotation {
                 if (qNote.midi <= (PBConst.MIDI.MIDDLE_C - 4)) // Need a third ledger line
                     this.drawGlyph(x - this.noteWidth / 4, this.orgY + (this.noteHeight * 5), PBConst.GLYPHS.ledgerLine, 'left', 'middle', color);  // For A below middle C
             }
-            if (qNote.sharped)
-                this.drawGlyph(x + this.noteWidth, y, PBConst.GLYPHS.sharp, 'left', 'middle', color);
+
+            switch (qNote.accidental) { // May have an accidental
+                case Accidentals.sharp:
+                    this.drawGlyph(x + this.noteWidth, y, PBConst.GLYPHS.sharp, 'left', 'middle', color);
+                    break;
+                case Accidentals.flat:
+                    this.drawGlyph(x + this.noteWidth, y, PBConst.GLYPHS.flat, 'left', 'middle', color);
+                    break;
+                case Accidentals.natural:
+                    this.drawGlyph(x + this.noteWidth, y, PBConst.GLYPHS.natural, 'left', 'middle', color);
+                    break;
+            }
         }
     }
 
