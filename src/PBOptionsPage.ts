@@ -6,7 +6,7 @@
 // There is no OK or Cancel button.  Changes are automatically used.
 //
 
-import {PBConst} from "./PBConst.js";
+import {KeySignature, PBConst} from "./PBConst.js";
 import {PBKeyCustomComponent} from "./PBKeyCustomComponent.js";
 
 interface MyOptions {
@@ -15,6 +15,7 @@ interface MyOptions {
     tonic: number;              // The tonic of the key, C Major = MIDI 60
     midiLow: number;            // The lowest note on the piano keyboard, which is >= PBConst.MIDI.LOW
     midiHigh: number;           // The highest note on the piano keyboard, which is <= PBConst.MIDI.HIGH
+    keySignature: KeySignature;
 }
 
 class PBOptionsPage {
@@ -189,7 +190,8 @@ const DEFAULT_OPTIONS: MyOptions = {
     timeToWait: 10,
     tonic: 60,
     midiLow: 60,
-    midiHigh: 72
+    midiHigh: 72,
+    keySignature: KeySignature.C
 };
 
 export {PBOptionsPage, MyOptions, DEFAULT_OPTIONS};
