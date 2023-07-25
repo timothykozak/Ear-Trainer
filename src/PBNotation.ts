@@ -76,7 +76,7 @@ class PBNotation {
         document.addEventListener(PBConst.EVENTS.sequencerNotePlayed, (event: CustomEvent) => {this.onSequencer(event);}, false);
         document.addEventListener(PBConst.EVENTS.keyboardHover, (event: CustomEvent) => {this.onHover(event);}, false);
         document.addEventListener(PBConst.EVENTS.testerNoteAnswered, (event: CustomEvent) => {this.onAnswered(event);}, false);
-        document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.redraw();}, false);
+        document.addEventListener(PBConst.EVENTS.testerFinished, (event: CustomEvent) => {this.answerNote =null; this.redraw();}, false);
         document.addEventListener(PBConst.EVENTS.optionsUpdated, (event: CustomEvent) => {this.onOptionsUpdated(event);}, false);
     }
 
@@ -166,20 +166,42 @@ class PBNotation {
 
     generateChormaticScale() : Array<ChromaticNote> {
         // The chromatic scale is the 12 note scale that contains the degree of the octave along
-        // with the accidental.  This is based on the KeySignature.  With keys based on sharps,
+        // with the accidental.  This is based on the KeySignature.  This follows the standard
+        // practice that sharps and flats are not mixed.  Therefore, in key signatures with sharps,
+        // the note a half step above F is F#, while in keys with flats it is Gb.  This means that
+        // the key signatures with flats have to be treated differently from the key signatures
+        // with sharps.  The key of C is grouped with the sharps.
         //
-        let theScale: Array<ChromaticNote> = [  {degree: 0, accidental: Accidentals.none},
-                                                {degree: 0, accidental: Accidentals.sharp},
-                                                {degree: 1, accidental: Accidentals.none},
-                                                {degree: 1, accidental: Accidentals.sharp},
-                                                {degree: 2, accidental: Accidentals.none},
-                                                {degree: 3, accidental: Accidentals.none},
-                                                {degree: 3, accidental: Accidentals.sharp},
-                                                {degree: 4, accidental: Accidentals.none},
-                                                {degree: 4, accidental: Accidentals.sharp},
-                                                {degree: 5, accidental: Accidentals.none},
-                                                {degree: 5, accidental: Accidentals.sharp},
-                                                {degree: 6, accidental: Accidentals.none}    ];
+        let theScale: Array<ChromaticNote>;
+        if (this.theOptions.keySignature >= KeySignature.C) {   // We are dealing with sharps
+            theScale = [
+                {degree: 0, accidental: Accidentals.none},
+                {degree: 0, accidental: Accidentals.sharp},
+                {degree: 1, accidental: Accidentals.none},
+                {degree: 1, accidental: Accidentals.sharp},
+                {degree: 2, accidental: Accidentals.none},
+                {degree: 3, accidental: Accidentals.none},
+                {degree: 3, accidental: Accidentals.sharp},
+                {degree: 4, accidental: Accidentals.none},
+                {degree: 4, accidental: Accidentals.sharp},
+                {degree: 5, accidental: Accidentals.none},
+                {degree: 5, accidental: Accidentals.sharp},
+                {degree: 6, accidental: Accidentals.none}   ];
+        } else {    // We are dealing with flats
+            theScale = [
+                {degree: 0, accidental: Accidentals.none},
+                {degree: 1, accidental: Accidentals.flat},
+                {degree: 1, accidental: Accidentals.none},
+                {degree: 2, accidental: Accidentals.flat},
+                {degree: 2, accidental: Accidentals.none},
+                {degree: 3, accidental: Accidentals.none},
+                {degree: 4, accidental: Accidentals.flat},
+                {degree: 4, accidental: Accidentals.none},
+                {degree: 5, accidental: Accidentals.flat},
+                {degree: 5, accidental: Accidentals.none},
+                {degree: 6, accidental: Accidentals.flat},
+                {degree: 6, accidental: Accidentals.none}   ];
+        }
         return(theScale);
     }
 
@@ -189,7 +211,7 @@ class PBNotation {
             return({midi: -1, octave: 0, degree: 0, accidental: Accidentals.none});
         let CDIO = PBConst.CHROMATIC_DEGREES_IN_OCTAVE;
         let theOctave = Math.floor(midiNote / CDIO - 1);
-        let theChromaticDegree = (midiNote + this.theOptions.keySignature - KeySignature.C) % CDIO;  // Find the chromatic degree relative to the tonic
+        let theChromaticDegree = midiNote % CDIO;  // Find the chromatic degree relative to C
         let theChromaticScale = this.generateChormaticScale();
         let theChromaticNote = theChromaticScale[theChromaticDegree];
         return({midi: midiNote, octave: theOctave, degree: theChromaticNote.degree, accidental: theChromaticNote.accidental});
